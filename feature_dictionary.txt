@@ -1,0 +1,74 @@
+==============================================================================
+  FEATURE DICTIONARY  -  the 14 columns you predict house prices from
+  AI Property Valuation Assistant  -  Module 2 (M2) of the project
+==============================================================================
+
+WHAT IT IS
+  The Ames dataset has 80 columns. You do NOT use all of them. You start with
+  this hand-picked subset of 14 high-signal features (13 numeric + 1 text).
+  In M2 you select exactly these columns into X (the inputs); SalePrice is y
+  (the thing you predict).
+
+  >> The column names have SPACES and exact capitalisation (e.g. "Gr Liv Area",
+     "Overall Qual"). Copy them EXACTLY or pandas raises KeyError.
+
+------------------------------------------------------------------------------
+  THE 13 NUMERIC FEATURES        (corr = correlation with SalePrice, -1..+1;
+                                  higher = moves more tightly with price)
+------------------------------------------------------------------------------
+  COLUMN              corr   WHAT IT MEANS (plain English)
+  ----------------    ----   --------------------------------------------------
+  Overall Qual        +.81   Overall material + finish quality, rated 1-10.
+                             THE strongest driver - quality beats size.
+  Gr Liv Area         +.72   Above-ground living area, in square feet.
+                             The main "how big is it" number.
+  Total Bsmt SF       +.66   Total basement area, square feet. (1 blank row.)
+  Garage Cars         +.65   How many cars the garage holds (0-4). (1 blank.)
+  Garage Area         +.65   Garage size, square feet. (1 blank row.)
+  1st Flr SF          +.64   First-floor area, square feet.
+  Year Built          +.57   Year the house was originally built.
+  Full Bath           +.54   Number of full bathrooms above ground.
+  Year Remod/Add      +.54   Year of last remodel (= Year Built if never
+                             remodelled).
+  TotRms AbvGrd       +.50   Total rooms above ground (does NOT count
+                             bathrooms).
+  Fireplaces          +.47   Number of fireplaces.
+  Lot Area            +.27   Total lot (land) size, square feet. Weak on its
+                             own - big lots aren't always pricey.
+  Bedroom AbvGr       +.14   Bedrooms above ground (NOT basement bedrooms).
+                             Surprisingly weak - more bedrooms != more money
+                             once size + quality are accounted for. Good
+                             talking point for your report.
+
+------------------------------------------------------------------------------
+  THE 1 CATEGORICAL (TEXT) FEATURE
+------------------------------------------------------------------------------
+  Neighborhood               Which of Ames' 28 neighbourhoods the house is in
+                             (e.g. NAmes, CollgCr, OldTown). It is TEXT, so M4
+                             turns it into 0/1 columns with one-hot encoding -
+                             a model cannot do maths on the word "NAmes".
+
+------------------------------------------------------------------------------
+  THE TARGET (what you predict)
+------------------------------------------------------------------------------
+  SalePrice                  The actual sale price in US dollars. This is y.
+                             It is NEVER part of X - that would be cheating
+                             (the model would just read off the answer).
+
+3 RULES THAT KEEP THIS SANE
+  1. copy column names EXACTLY      -> spaces + capitals matter ("Gr Liv Area")
+  2. SalePrice is y, never in X     -> putting the answer in the inputs = leak
+  3. split BEFORE you preprocess     -> the test set must stay unseen (see M4)
+
+WHY THIS SUBSET (own this in your report)
+  These 14 are picked for high signal + being easy to explain to a
+  non-technical reader. They are a STARTING POINT, not a locked answer: once
+  the pipeline runs end-to-end, you may add features from the full 80-column
+  file and measure whether your R-squared improves. Document what you added
+  and whether it helped - that experiment earns marks.
+
+  Correlations above are computed on the 2,925 rows AFTER dropping De Cock's
+  5 outlier sales (Gr Liv Area > 4000). They are a guide to single-feature
+  signal, NOT proof of importance - the Random Forest (M7) re-ranks them once
+  features interact (e.g. Garage Cars and Garage Area partly overlap).
+==============================================================================

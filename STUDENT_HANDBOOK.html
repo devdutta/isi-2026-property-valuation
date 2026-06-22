@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Project Handbook — AI Property Valuation Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f6f8; --sheet:#ffffff; --ink:#14151a; --ink2:#3a3d47;
+    --dim:#71757f; --faint:#9a9ca6; --line:#ececf1; --line2:#f4f4f7;
+    --teal:#0f9488; --teal-d:#0c7a70; --teal-bg:#e6f6f4; --teal-soft:#f0faf8; --teal-bd:#cdeee9;
+    --amber-bg:#fff7e8; --amber-bd:#f3e2bf; --amber-ink:#9a6b12;
+    --rose-bg:#fdf0ee; --rose-bd:#f6d8d2; --rose-ink:#b04a38;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .sheet{max-width:940px;margin:0 auto;background:var(--sheet);min-height:100vh;box-shadow:0 0 60px rgba(20,30,60,.06)}
+
+  nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 40px;display:flex;flex-wrap:wrap;gap:5px 18px;align-items:center}
+  nav .brand{font-weight:800;font-size:14px;color:var(--teal-d);margin-right:8px}
+  nav a{font-size:12.5px;color:var(--dim);text-decoration:none;font-weight:500;padding:3px 0;border-bottom:2px solid transparent}
+  nav a:hover{color:var(--teal-d);border-color:var(--teal)}
+
+  .pad{padding:40px 48px}
+  header.hero{padding:54px 48px 40px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:16px}
+  h1{font-size:40px;font-weight:800;letter-spacing:-.025em;line-height:1.05}
+  .hero .lede{margin-top:14px;font-size:17px;color:var(--ink2);max-width:680px}
+  .hero .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .fact{font-size:12.5px;font-family:'IBM Plex Mono',monospace;background:var(--teal-soft);border:1px solid var(--teal-bd);color:var(--teal-d);padding:6px 12px;border-radius:30px}
+
+  section{padding:42px 48px;border-bottom:1px solid var(--line2)}
+  .sec-no{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--teal);font-weight:500;letter-spacing:.1em}
+  h2{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 18px}
+  h3{font-size:16px;font-weight:700;margin:24px 0 8px;color:var(--ink)}
+  p{margin-bottom:12px;color:var(--ink2)}
+  a.link{color:var(--teal-d);text-decoration:none;border-bottom:1px solid var(--teal-bd);font-weight:500}
+  a.link:hover{border-color:var(--teal)}
+  ul,ol{margin:6px 0 14px 4px;padding-left:20px}
+  li{margin-bottom:6px;color:var(--ink2)}
+  strong{color:var(--ink);font-weight:700}
+  code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:#f3f4f7;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:#244}
+  pre{background:#0f1b1a;color:#d7efe9;border-radius:12px;padding:16px 18px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.6;margin:10px 0 16px}
+  pre .c{color:#6f9a92}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0 16px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--line2);vertical-align:top}
+  th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:#fafbfc;font-weight:600}
+  td b{color:var(--ink)}
+  tr:last-child td{border-bottom:none}
+  .pill{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:30px;white-space:nowrap}
+  .p-fam{background:var(--teal-bg);color:var(--teal-d)}
+  .p-new{background:var(--amber-bg);color:var(--amber-ink);border:1px solid var(--amber-bd)}
+  .p-opt{background:#eef0f3;color:#5d636e}
+
+  .callout{border-radius:12px;padding:14px 18px;margin:14px 0;font-size:14px}
+  .c-teal{background:var(--teal-soft);border:1px solid var(--teal-bd);color:var(--teal-d)}
+  .c-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber-ink)}
+  .c-rose{background:var(--rose-bg);border:1px solid var(--rose-bd);color:var(--rose-ink)}
+  .callout strong{color:inherit}
+
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:18px 0 8px}
+  .node{flex:1;min-width:120px;background:#fff;border:1.5px solid var(--teal-bd);border-radius:11px;padding:13px 12px;text-align:center;font-size:12.5px;font-weight:600;color:var(--ink);display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .node small{display:block;font-weight:500;color:var(--dim);font-size:11px;margin-top:3px;font-family:'IBM Plex Mono',monospace}
+  .node.star{border-color:var(--teal);background:var(--teal-soft);box-shadow:0 4px 14px rgba(15,148,136,.12)}
+  .node.llm{border-style:dashed}
+  .conn{display:flex;align-items:center;justify-content:center;color:var(--teal);font-weight:800;padding:0 4px;font-size:16px}
+  @media(max-width:680px){.flow{flex-direction:column}.conn{transform:rotate(90deg);padding:4px 0}}
+
+  .week{display:grid;grid-template-columns:96px 1fr;gap:16px;padding:15px 0;border-top:1px solid var(--line2)}
+  .week:first-of-type{border-top:none}
+  .wk-tag{font-size:11px;font-weight:700;color:var(--teal-d);background:var(--teal-bg);border-radius:8px;padding:6px 4px;text-align:center;height:fit-content}
+
+  footer{padding:30px 48px;color:var(--faint);font-size:12px;font-family:'IBM Plex Mono',monospace}
+  .roles td:first-child{white-space:nowrap}
+
+  @media print{
+    body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    nav{display:none}
+    .sheet{max-width:100%;box-shadow:none}
+    header.hero{padding:30px 40px 28px}
+    section{padding:30px 40px}
+    table,pre,.callout,.week,.flow,.roles tr,.facts{break-inside:avoid}
+    h1,h2,h3{break-after:avoid}
+    a.link{color:var(--teal-d)}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <nav>
+    <span class="brand">◇ Project Handbook</span>
+    <a href="#charter">Charter</a>
+    <a href="#data">Data</a>
+    <a href="#build">What you build</a>
+    <a href="#team">Team</a>
+    <a href="#plan">Plan &amp; meetings</a>
+    <a href="#reading">Reading</a>
+    <a href="#report">Report</a>
+    <a href="#setup">Setup</a>
+    <a href="#howwework">How we work</a>
+    <a href="BUILD_SPEC.html" style="margin-left:auto">Build Spec →</a>
+  </nav>
+
+  <header class="hero">
+    <div class="eyebrow">ISI Summer Internship 2026 · Group 1 · Student Project Handbook</div>
+    <h1>AI Property<br>Valuation Assistant</h1>
+    <p class="lede">A 6-week data-science project. You will build, compare, and evaluate two machine-learning models that predict house prices from real data — then add an AI layer that explains each prediction in plain English and understands a house described in words.</p>
+    <div class="facts">
+      <span class="fact">5 students · 1 team</span>
+      <span class="fact">Mentor: Dev Dutta</span>
+      <span class="fact">Kickoff: Tue 23 Jun 2026</span>
+      <span class="fact">Report due: 31 Jul 2026</span>
+      <span class="fact">Meetings: Tue 7–9 PM IST · Teams</span>
+    </div>
+  </header>
+
+  <!-- 1 CHARTER -->
+  <section id="charter">
+    <div class="sec-no">01</div>
+    <h2>The project, in one page</h2>
+    <p><strong>The problem.</strong> What is a house worth? Buyers, sellers, and banks all need an estimate — and the honest answer comes from data: similar houses, their features, and what they sold for. Your system learns that relationship from ~2,900 real home sales and predicts the price of a house from its details. Then it adds a friendly AI layer that <em>explains</em> the estimate and lets a user describe a house in plain English.</p>
+
+    <h3>What you will deliver</h3>
+    <ol>
+      <li><strong>A Jupyter notebook</strong> that builds <em>two</em> prediction models (a Linear Regression baseline and a Random Forest), <strong>compares them</strong>, and <strong>picks the better one</strong> with proper metrics. <em>This is the graded core.</em></li>
+      <li><strong>A working valuation "app"</strong> — using the chosen model to price houses it has never seen: a <em>single</em> house from its features, or a whole <em>batch</em> of houses at once. <em>This is the payoff — the reason you built the model.</em></li>
+      <li><strong>An AI assistant layer</strong> — a free LLM (Groq) that explains a predicted price in plain English (one house or a batch) and parses a plain-English house description into features the model can price.</li>
+      <li><strong>(Optional, only if time allows)</strong> a tiny interactive demo UI that wraps the app — in-notebook with <code>ipywidgets</code>.</li>
+      <li><strong>The Project Report</strong> — the primary assessed artifact (see §07).</li>
+    </ol>
+
+    <div class="callout c-teal"><strong>The one thing that makes this Data Science, not a chatbot:</strong> the prediction models — building two, comparing them, picking a winner, and then <strong>using it to price real houses</strong>. Everything else supports that.</div>
+    <div class="callout c-amber"><strong>Why build a price predictor at all?</strong> So you can value a house <em>nobody has sold yet</em> — instantly, from its features. That's the product a bank, buyer, or agent would actually use. Modules 1–7 build and choose the model; <strong>Module 8 is where it pays off</strong> — you type in a house and get a price.</div>
+
+    <div class="callout c-rose"><strong>The honesty rule you'll hear all project (and it earns marks):</strong> the <strong>machine-learning model predicts the price</strong>; the <strong>LLM only explains it</strong> in words and reads the user's description. A language model can't fairly predict a number from a table — so we never claim it does. Say this clearly in your report.</div>
+
+    <h3>Scope — read this carefully</h3>
+    <table>
+      <tr><th>✅ In scope</th><th>🚫 Out of scope (deliberately)</th></tr>
+      <tr>
+        <td>Real housing dataset · cleaning · EDA · two models (Linear Regression + Random Forest) · proper evaluation · feature importance · charts · an LLM explain + describe-a-house layer · optional tiny demo</td>
+        <td>A live website / deployed app · user accounts · scraping live listings · predicting Indian/Bengaluru prices · trying every model under the sun · an LLM that "predicts" prices</td>
+      </tr>
+    </table>
+    <div class="callout c-amber"><strong>Why so much is out of scope:</strong> ~6 weeks, remote team, first real project. We deliberately remove the parts where student projects usually collapse (deployment, scraping, scope creep) so you can go <em>deep</em> on the data science and finish with a strong report. Ambition lives in the <em>evaluation</em>, not in the plumbing.</div>
+  </section>
+
+  <!-- 2 DATA -->
+  <section id="data">
+    <div class="sec-no">02</div>
+    <h2>The data (real, verified)</h2>
+    <p>You use <strong>one</strong> dataset — your mentor gives it to you, so there is nothing to hunt for. Your Week-1 job is to load it, look at it, and confirm its shape — don't assume, verify.</p>
+
+    <h3>The dataset — the Ames housing data</h3>
+    <p>This is the <strong>Ames, Iowa housing dataset</strong>, compiled by Prof. Dean De Cock as a modern, richer alternative to the old Boston housing data. It has <strong>2,930 home sales</strong> and <strong>82 columns</strong> describing each house — size, quality, year built, garage, basement, neighbourhood, and the <code>SalePrice</code> you predict. Your mentor shares the file <code>AmesHousing.csv</code> on Teams.</p>
+    <p style="font-size:13px;color:#555"><strong>Reference:</strong> Dean De Cock, "Ames, Iowa: Alternative to the Boston Housing Data as an End of Semester Regression Project," <em>Journal of Statistics Education</em>, 2011. The same data underpins the well-known Kaggle "House Prices: Advanced Regression Techniques" competition. We start from a hand-picked <strong>14-feature subset</strong> (see the feature dictionary we give you), then you may expand it.</p>
+    <div class="callout c-teal"><strong>De-risking move:</strong> get the whole pipeline running end-to-end on the 14-feature subset <em>first</em> — load → clean → two models → compare. Only once that works should you add more features and see if accuracy improves. A working simple version beats an ambitious broken one.</div>
+    <div class="callout c-amber"><strong>One ethics footnote for your report:</strong> the famous old "Boston Housing" dataset was removed from scikit-learn because it contained a racially-biased feature. The Ames data is the modern replacement — and a good place to note in your report that data choices carry ethical weight.</div>
+  </section>
+
+  <!-- 3 WHAT YOU BUILD -->
+  <section id="build">
+    <div class="sec-no">03</div>
+    <h2>What you're building</h2>
+    <p>Everything below runs <strong>inside one Jupyter notebook</strong> (top to bottom). The optional demo UI stays in the notebook (<code>ipywidgets</code>).</p>
+    <div class="callout c-teal"><strong>Your step-by-step build manual:</strong> this Handbook explains <em>what</em> and <em>why</em>. For the exact <em>how</em> — every module's inputs and outputs, runnable starter code, worked examples, and common errors — work from the <a class="link" href="BUILD_SPEC.html"><strong>Build Specification →</strong></a>. Read it alongside this page.</div>
+
+    <div class="flow">
+      <div class="node">Load + pick features<small>14 features</small></div>
+      <div class="conn">→</div>
+      <div class="node">Split + preprocess<small>train / test</small></div>
+      <div class="conn">→</div>
+      <div class="node star">Two models<br>LinReg · Random Forest<small>★ the DS core</small></div>
+      <div class="conn">→</div>
+      <div class="node star">Compare &amp; pick winner<small>R² · final_model</small></div>
+      <div class="conn">→</div>
+      <div class="node star">Predict prices<br>single · batch<small>★ the app / payoff</small></div>
+      <div class="conn">→</div>
+      <div class="node llm">AI assistant<small>Groq · explain</small></div>
+    </div>
+
+    <h3>The same flow, with a real example</h3>
+    <p>Take <strong>one house</strong>: <em>3 bedrooms, about 1,500 sq ft, built in 2005, overall quality 7, a 2-car garage, 2 full bathrooms.</em> Here is what the system does with it — and where the two real questions get answered: <em>what is it worth?</em> and <em>why?</em></p>
+    <ol>
+      <li><strong>Learn from history.</strong> The models train on ~2,900 past sales — what size, quality, and location did to price.</li>
+      <li><strong>Predict.</strong> The winning model (Random Forest) prices this house at <strong>≈ $188,000</strong>.</li>
+      <li><strong>Explain.</strong> The LLM writes: <em>"This sits in the mid-range largely because its overall quality (7/10) and ~1,500 sq ft of living space are solid but not premium; the 2005 build and 2-car garage add value…"</em> — using the model's <em>actual</em> top drivers, and <strong>never inventing a different price</strong>.</li>
+    </ol>
+
+    <h3>The two models, concretely</h3>
+    <p><strong>Baseline — Linear Regression</strong> (a straight-line fit; the yardstick):</p>
+    <pre><span class="c"># preprocessor (from M4) + the model, in one pipeline that cleans then fits</span>
+lr_model = Pipeline([("prep", preprocessor), ("model", LinearRegression())])
+lr_model.fit(X_train, y_train)
+r2 = r2_score(y_test, lr_model.predict(X_test))   <span class="c"># ~0.88</span></pre>
+    <p><strong>Smarter — Random Forest</strong> (hundreds of decision trees, averaged):</p>
+    <pre>rf_model = Pipeline([("prep", preprocessor),
+                     ("model", RandomForestRegressor(n_estimators=300, random_state=42))])
+rf_model.fit(X_train, y_train)
+r2 = r2_score(y_test, rf_model.predict(X_test))   <span class="c"># ~0.92 - it wins</span></pre>
+    <p>You then <strong>compare</strong> the two: which predicts real prices more accurately, and why? That comparison is the heart of the report.</p>
+
+    <h3>The AI assistant (verified Groq quickstart)</h3>
+    <pre><span class="c"># from console.groq.com/docs/quickstart - free tier, no credit card</span>
+from groq import Groq
+client = Groq(api_key=os.environ["GROQ_API_KEY"])
+resp = client.chat.completions.create(
+    model="llama-3.3-70b-versatile",
+    messages=[{"role":"user","content":
+        f"A model priced this house at ${price:,.0f}. Do NOT change the price. "
+        f"Explain in 3-4 sentences why, using: {drivers}."}])
+print(resp.choices[0].message.content)</pre>
+    <div class="callout c-teal">The AI layer is an <strong>add-on, not load-bearing</strong>. If the Groq call fails on demo day, the prediction study still stands on its own. That is by design.</div>
+
+    <h3>Library map — most of this is new, and that's the point</h3>
+    <table>
+      <tr><th>Component</th><th>Python library</th><th></th></tr>
+      <tr><td>Loading &amp; cleaning data</td><td><code>pandas</code>, <code>numpy</code></td><td><span class="pill p-fam">familiar</span></td></tr>
+      <tr><td>Charts (EDA + results)</td><td><code>matplotlib</code></td><td><span class="pill p-fam">familiar</span></td></tr>
+      <tr><td>Split, preprocess, pipelines</td><td><code>scikit-learn</code> (<code>train_test_split</code>, <code>ColumnTransformer</code>, <code>Pipeline</code>)</td><td><span class="pill p-new">new</span></td></tr>
+      <tr><td>The two models</td><td><code>scikit-learn</code> (<code>LinearRegression</code>, <code>RandomForestRegressor</code>)</td><td><span class="pill p-new">new</span></td></tr>
+      <tr><td>Evaluation metrics</td><td><code>scikit-learn.metrics</code> (RMSE, MAE, R²)</td><td><span class="pill p-new">new</span></td></tr>
+      <tr><td>AI assistant</td><td><code>groq</code></td><td><span class="pill p-new">new</span></td></tr>
+      <tr><td>Optional demo UI</td><td><code>ipywidgets</code> (in-notebook)</td><td><span class="pill p-opt">optional</span></td></tr>
+    </table>
+    <div class="callout c-amber"><strong>If most of the table says "new" — good.</strong> That is exactly your learning gap, and closing it is the point of the internship. We build it together, one module a week, and the Build Spec gives you runnable starter code for every step so you are never guessing.</div>
+  </section>
+
+  <!-- 4 TEAM -->
+  <section id="team">
+    <div class="sec-no">04</div>
+    <h2>The team — how you'll work together</h2>
+    <p>There are <strong>five of you</strong>. You build <strong>one notebook, together, in order</strong> — Module 0 through Module 9 (plus an optional Module 10), a module or two at each weekly meeting. Nobody works on a separate copy: whoever is sharing their screen types while the rest follow and help, and the notebook lives in your one shared GitHub repo so there is always a single current version.</p>
+    <p>The part you <em>do</em> divide up is the <strong>report</strong> — writing is naturally a per-person job. Split the chapters so everyone owns a piece:</p>
+    <table class="roles">
+      <tr><th>Report chapter</th><th>What it covers</th></tr>
+      <tr><td><b>Background &amp; Data</b></td><td>the problem, the dataset, how you cleaned it and chose the 14 features (M1–M2)</td></tr>
+      <tr><td><b>EDA &amp; Methodology</b></td><td>the exploration charts + how the two models work, in plain English (M3–M6)</td></tr>
+      <tr><td><b>Results &amp; Evaluation ★</b></td><td>the comparison table, charts, feature importance — which model won and why (M7)</td></tr>
+      <tr><td><b>AI Assistant &amp; Honesty</b></td><td>the LLM layer, the describe-a-house feature, and the "model predicts, LLM explains" discussion (M8)</td></tr>
+      <tr><td><b>Abstract, Intro, Conclusion &amp; Assembly</b></td><td>framing, limitations, future work — plus repo/Colab ops and final assembly</td></tr>
+    </table>
+    <div class="callout c-amber"><strong>Two rules that keep you safe:</strong> build the notebook <strong>in order</strong> (each module needs the one before it), and <strong>commit to GitHub every week</strong> so you never lose work. Stuck? Say so early in the chat.</div>
+  </section>
+
+  <!-- 5 PLAN -->
+  <section id="plan">
+    <div class="sec-no">05</div>
+    <h2>Weekly plan &amp; meeting calendar</h2>
+    <p>We meet on Microsoft Teams — the <strong>kickoff is Tue 23 Jun</strong>, then <strong>every Tuesday, 7:00–9:00 PM IST</strong> through submission (6 meetings total). Each meeting reviews a concrete deliverable and your blockers. <strong>Come to every meeting with three things:</strong> what you did, what's blocking you, what's next.</p>
+    <div class="callout c-teal">The <b>module codes</b> below (M0–M9) refer to the build modules in the <a class="link" href="BUILD_SPEC.html#plan"><strong>Build Specification → Weekly Plan</strong></a>, which gives the exact build → test-run → demo steps for each sprint. This calendar and that plan are the same schedule, two views.</div>
+    <table>
+      <tr><th>Meeting</th><th>Date · 7–9 PM IST</th><th>We review / decide</th><th>Deliverable due at this meeting</th></tr>
+      <tr><td><b>1 · Kickoff</b></td><td>Tue 23 Jun</td><td>Meet, finalise project, roles, setup plan</td><td>— (Week-1 work assigned tonight)</td></tr>
+      <tr><td><b>2</b></td><td>Tue 30 Jun</td><td>Is everyone set up? Data loading?</td><td><span class="pill p-fam">M0 · M1 · M2</span><br><b>Colab + GitHub repo</b> set up · <code>df_raw</code> loads (2930×82) · <code>X</code> is 2925×14</td></tr>
+      <tr><td><b>3</b></td><td>Tue 7 Jul</td><td>EDA + first model</td><td><span class="pill p-fam">M3 · M4 · M5</span><br>Two EDA charts · train/test split · Linear Regression baseline R² (~0.88)</td></tr>
+      <tr><td><b>4</b></td><td>Tue 14 Jul</td><td>Second model + pick the winner ★</td><td><span class="pill p-fam">M6 · M7</span><br>Random Forest · comparison table + charts · <code>final_model</code> chosen — you can say which won and why</td></tr>
+      <tr><td><b>5</b></td><td>Tue 21 Jul</td><td>The app + AI layer + scope freeze</td><td><span class="pill p-fam">M8 · M9</span> <span class="pill p-opt">M10?</span><br>Predict single + batch · explain-a-price + describe-a-house · <strong>feature freeze</strong> · decide on optional UI</td></tr>
+      <tr><td><b>6 · Final</b></td><td>Tue 28 Jul</td><td>Report draft + last review</td><td><span class="pill p-opt">optional M10</span> <span class="pill p-fam">report</span><br>Notebook clean top-to-bottom · each owner's draft section · dry-run</td></tr>
+      <tr><td><b>Submit</b></td><td>Fri 31 Jul</td><td>—</td><td>Final report submitted to ISI</td></tr>
+    </table>
+    <div class="callout c-amber"><strong>Timeline reality:</strong> kickoff (Tue 23 Jun) to deadline (31 Jul) is ≈ <strong>5.5 working weeks across 6 meetings</strong> — tight, because we started a little later than planned. That's exactly why scope is lean and why you write the report <em>throughout</em>, not at the end. No new ideas after Meeting 5's feature freeze.</div>
+  </section>
+
+  <!-- 6 READING -->
+  <section id="reading">
+    <div class="sec-no">06</div>
+    <h2>Reading list</h2>
+    <p>Grouped by topic. Start with the <span class="pill p-new">new</span> areas — that's where your learning gap is. Everything links to <strong>official docs or established tutorials</strong>.</p>
+
+    <h3>Regression — the concept</h3>
+    <ul>
+      <li><a class="link" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html">scikit-learn — LinearRegression</a></li>
+      <li><a class="link" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html">scikit-learn — RandomForestRegressor</a></li>
+    </ul>
+    <h3>Preprocessing &amp; pipelines <span class="pill p-new">new</span></h3>
+    <ul>
+      <li><a class="link" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">scikit-learn — Pipeline</a></li>
+      <li><a class="link" href="https://scikit-learn.org/stable/modules/compose.html">scikit-learn — ColumnTransformer (compose)</a></li>
+      <li><a class="link" href="https://scikit-learn.org/stable/modules/preprocessing.html">scikit-learn — Preprocessing (scaling, one-hot)</a></li>
+    </ul>
+    <h3>Evaluation</h3>
+    <ul><li><a class="link" href="https://scikit-learn.org/stable/modules/model_evaluation.html">scikit-learn — Model evaluation (RMSE, MAE, R²)</a></li></ul>
+    <h3>The dataset</h3>
+    <ul><li><a class="link" href="https://www.kaggle.com/c/house-prices-advanced-regression-techniques">Kaggle — House Prices: Advanced Regression Techniques</a> (the same Ames data + a data dictionary)</li></ul>
+    <h3>LLM API <span class="pill p-new">new</span></h3>
+    <ul>
+      <li><a class="link" href="https://console.groq.com/docs/quickstart">Groq — Quickstart</a> · <a class="link" href="https://github.com/groq/groq-python">groq-python library</a> · <a class="link" href="https://github.com/groq/groq-api-cookbook">Groq API Cookbook</a></li>
+    </ul>
+    <h3>Tools <span class="pill p-fam">familiar</span></h3>
+    <ul>
+      <li><strong>Google Colab</strong> — <a class="link" href="https://colab.research.google.com/">Welcome to Colaboratory</a> (Google's own intro notebook)</li>
+    </ul>
+  </section>
+
+  <!-- 7 REPORT -->
+  <section id="report">
+    <div class="sec-no">07</div>
+    <h2>The Project Report</h2>
+    <p>The report is the <strong>primary assessed deliverable</strong> — and you should write it <em>as you go</em>, not in the last week.</p>
+    <div class="callout c-amber"><strong>Format pending from ISI.</strong> ISI uses its own report format, which we haven't received yet. The official template will be confirmed in <strong>Meeting 2 (30 Jun)</strong>. Until then, use the provisional outline below only as a guide for <em>what content to capture</em> — not the final structure.</div>
+    <p><strong>Provisional outline (start gathering this content now):</strong> Abstract · Introduction · Background (regression, Linear Regression vs Random Forest) · Data &amp; EDA · Methodology · Experiments &amp; Evaluation <em>(your strongest section)</em> · Results &amp; Discussion (incl. feature importance) · The valuation app &amp; its use cases · The AI Assistant &amp; the honesty guardrail · Limitations &amp; Future Work · Conclusion · References · Appendix (the notebook).</p>
+    <p><strong>Divide the chapters across the team</strong> (see §04) so everyone owns a piece. Agree who takes what in Meeting 2.</p>
+
+    <h3>Where this can go next (great Future-Work material)</h3>
+    <div class="callout c-teal"><strong>Same problem, your own data:</strong> the whole pipeline isn't tied to Ames, Iowa. After the project, swap in an <strong>Indian / Bengaluru housing dataset</strong> (point Module 1 at it, adjust the feature names) and re-run everything from there — a great way to take the method somewhere you care about. (Indian data is messier, which is why we learn on the clean Ames file first.)</div>
+    <div class="callout c-teal"><strong>Same recipe, other problems:</strong> this exact workflow — load → features → split → train two models → compare → predict → explain — also predicts <strong>customer churn, employee attrition, loan default,</strong> and more. Those are <em>yes/no</em> questions (classification), so you'd swap the model family and the metrics (accuracy/precision instead of R²/RMSE), but the shape is identical. Learn it once here, reuse it everywhere — say so in your Future Work.</div>
+  </section>
+
+  <!-- 8 SETUP -->
+  <section id="setup">
+    <div class="sec-no">08</div>
+    <h2>Tools, setup &amp; where things live</h2>
+
+    <h3>Where everything lives</h3>
+    <table>
+      <tr><th>Tool</th><th>Used for</th></tr>
+      <tr><td><b>Microsoft Teams</b><br>(our group community)</td><td><b>All communication, the weekly meetings, and file sharing</b> — the dataset, the report, meeting notes. This is our home base.</td></tr>
+      <tr><td><b>GitHub</b><br>(one shared repo)</td><td><b>All code</b> — the notebook + <code>requirements.txt</code>. The team <b>creates one repo in Week 1</b> and commits to it every week.</td></tr>
+      <tr><td><b>Google Colab</b></td><td>The platform you <b>build on</b> — a free, browser-based Jupyter notebook. Nothing to install.</td></tr>
+    </table>
+
+    <h3>New to Google Colab? Start here</h3>
+    <ul>
+      <li><a class="link" href="https://colab.research.google.com/">Welcome to Colaboratory</a> — Google's own intro notebook (it opens automatically when you visit Colab).</li>
+    </ul>
+    <p>Colab is just Jupyter in the browser — the same kind of notebooks you used in the ML/DL sessions, but with nothing to install and an identical environment for all five of you. <code>pandas</code>, <code>numpy</code>, <code>scikit-learn</code> and <code>matplotlib</code> come pre-installed; you'll <code>pip install groq</code> in a cell for the AI layer.</p>
+
+    <h3>Day-1 checklist (do all of this in Week 1)</h3>
+    <ol>
+      <li><strong>Join the Teams community</strong> — everyone (your mentor posts the link).</li>
+      <li><strong>Google Colab</strong> — everyone signs in with a Google account at colab.research.google.com.</li>
+      <li><strong>Create ONE shared GitHub repo</strong> for the team, add a <code>requirements.txt</code>, give all five access. <b>All code lives here.</b></li>
+      <li><strong>Free Groq key</strong> — sign up at console.groq.com (no credit card), create an API key, store it as a Colab secret / in a <code>.env</code> file. Never paste keys into shared code or GitHub. <em>(Only needed for M9 — you can start without it.)</em></li>
+      <li><strong>Smoke test</strong> — one Colab cell that imports <code>pandas</code> and <code>sklearn</code> and loads the CSV. Works → environment ready.</li>
+    </ol>
+    <div class="callout c-amber"><strong>Security:</strong> a leaked API key can be abused. Keep keys out of GitHub — use Colab Secrets or a <code>.gitignore</code>d <code>.env</code> file.</div>
+  </section>
+
+  <!-- 9 HOW WE WORK -->
+  <section id="howwework">
+    <div class="sec-no">09</div>
+    <h2>How we work together</h2>
+    <ul>
+      <li><strong>Weekly 2-hour touchpoint with the mentor.</strong> Come prepared: what you did, what's blocking you, what you'll do next. The agenda for each week is in §05.</li>
+      <li><strong>Definition of "done" each week</strong> = code committed to GitHub + a one-paragraph note of progress + blockers named. "Almost working" on a laptop doesn't count — push it.</li>
+      <li><strong>Say when you're stuck.</strong> A blocker raised on day 2 is a 10-minute fix; the same blocker hidden until the touchpoint costs a week. There is no penalty for asking.</li>
+      <li><strong>Be honest in the report.</strong> "The Random Forest only beat Linear Regression by a little, and here's where it still struggles" is a <em>strong</em> result, not a failure. Examiners reward honest evaluation over inflated claims.</li>
+    </ul>
+    <div class="callout c-teal"><strong>Remember the goal:</strong> two models you understand deeply, an honest comparison, and a report that explains it clearly — plus an AI layer that explains, never invents. Depth beats shine.</div>
+  </section>
+
+  <footer>
+    ISI Summer Internship 2026 · Group 1 · Student Project Handbook · Mentor: Dev Dutta · v1 · external resources verified June 2026
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Pipeline — AI Property Valuation Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14151a; --ink2:#3a3d47; --dim:#71757f; --faint:#9a9ca6;
+    --teal:#0f9488; --teal-d:#0c7a70; --teal-bg:#e6f6f4; --teal-soft:#f0faf8; --teal-bd:#cdeee9;
+    --amber-bg:#fff7e8; --amber-bd:#f3e2bf; --amber-ink:#9a6b12; --line:#ececf1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#eef0f3;font-family:'Plus Jakarta Sans',sans-serif;-webkit-font-smoothing:antialiased;padding:30px}
+  .canvas{width:900px;margin:0 auto;background:#fff;border-radius:20px;padding:40px 48px 46px;box-shadow:0 10px 50px rgba(20,30,60,.08)}
+  .eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:700;text-align:center}
+  h1{font-size:27px;font-weight:800;letter-spacing:-.02em;text-align:center;margin:8px 0 4px;color:var(--ink)}
+  .sub{text-align:center;color:var(--dim);font-size:13.5px;margin-bottom:26px}
+
+  .box{border:1.5px solid var(--teal-bd);border-radius:13px;padding:14px 18px;background:#fff;display:flex;align-items:center;gap:15px}
+  .num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:14px;color:#fff;background:var(--teal);min-width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .t{font-weight:700;font-size:15px;color:var(--ink)}
+  .d{font-size:12px;color:var(--dim);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+  .box.core{border-color:var(--teal);background:var(--teal-soft);box-shadow:0 5px 16px rgba(15,148,136,.12)}
+  .box.llm{border-style:dashed}
+  .box.opt{border-style:dashed;background:#fafbfc}
+  .box.opt .num{background:#aab0b8}
+
+  .arrow{display:flex;flex-direction:column;align-items:center;padding:5px 0}
+  .arrow .lbl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;background:var(--teal-bg);color:var(--teal-d);border:1px solid var(--teal-bd);border-radius:30px;padding:2px 12px;margin-bottom:3px}
+  .arrow .tri{width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--teal)}
+
+  .forknote{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin:7px 0 6px}
+  .parallel{display:flex;gap:16px}
+  .parallel .box{flex:1}
+
+  .corebadge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.05em;color:var(--teal-d);background:#fff;border:1px solid var(--teal-bd);border-radius:30px;padding:2px 9px;margin-left:auto}
+  .legend{margin-top:26px;display:flex;gap:18px;justify-content:center;flex-wrap:wrap;font-size:11.5px;color:var(--ink2)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .sw{width:22px;height:13px;border-radius:4px;border:1.5px solid var(--teal-bd)}
+  .sw.core{background:var(--teal-soft);border-color:var(--teal)}
+  .sw.llm{border-style:dashed;background:#fff}
+  .footer{text-align:center;color:var(--faint);font-size:10.5px;font-family:'IBM Plex Mono',monospace;margin-top:18px}
+  .honesty{margin-top:18px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:11px;padding:11px 15px;font-size:12.5px;color:var(--amber-ink);text-align:center}
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="eyebrow">ISI Summer Internship 2026 · Group 1</div>
+  <h1>AI Property Valuation Assistant — the pipeline</h1>
+  <div class="sub">One Jupyter notebook on Google Colab · built top → bottom · labels on arrows are the variables that flow</div>
+
+  <div class="box"><span class="num">1</span><div><div class="t">Load housing data</div><div class="d">AmesHousing.csv → df_raw &nbsp;(2930 × 82)</div></div></div>
+  <div class="arrow"><div class="lbl">df_raw</div><div class="tri"></div></div>
+
+  <div class="box"><span class="num">2</span><div><div class="t">Clean &amp; pick 14 features</div><div class="d">drop 5 outliers · choose features → X · y</div></div></div>
+  <div class="arrow"><div class="lbl">X · y</div><div class="tri"></div></div>
+
+  <div class="box"><span class="num">3</span><div><div class="t">Explore the data (EDA)</div><div class="d">price distribution · what correlates with price</div></div></div>
+  <div class="arrow"><div class="lbl">X · y</div><div class="tri"></div></div>
+
+  <div class="box"><span class="num">4</span><div><div class="t">Split + preprocess</div><div class="d">train/test (seed 42) · impute · scale · one-hot → preprocessor</div></div></div>
+
+  <div class="forknote">↓ &nbsp; same training data + preprocessor go into BOTH models &nbsp; ↓</div>
+  <div class="parallel">
+    <div class="box core"><span class="num">5</span><div><div class="t">Linear Regression</div><div class="d">baseline · R² ≈ 0.88</div></div></div>
+    <div class="box core"><span class="num">6</span><div><div class="t">Random Forest</div><div class="d">300 trees · R² ≈ 0.92</div></div></div>
+  </div>
+  <div class="arrow"><div class="lbl">lr_metrics + rf_metrics</div><div class="tri"></div></div>
+
+  <div class="box core"><span class="num">7</span><div><div class="t">Evaluate, compare &amp; select the final model</div><div class="d">RMSE · MAE · R² · charts · winner = Random Forest</div></div><span class="corebadge">★ THE GRADED CORE</span></div>
+  <div class="arrow"><div class="lbl">final_model</div><div class="tri"></div></div>
+
+  <div class="box core"><span class="num">8</span><div><div class="t">Predict prices — single house + batch</div><div class="d">type a house → a price · or a whole table at once</div></div><span class="corebadge">★ THE APP / PAYOFF</span></div>
+  <div class="arrow"><div class="lbl">predicted price(s)</div><div class="tri"></div></div>
+
+  <div class="box llm"><span class="num">9</span><div><div class="t">AI assistant (Groq, free)</div><div class="d">explain the price in plain English · describe-a-house → price</div></div></div>
+  <div class="arrow"><div class="lbl">optional</div><div class="tri"></div></div>
+
+  <div class="box opt"><span class="num">10</span><div><div class="t">Optional UI — only if time allows</div><div class="d">ipywidgets: type a house → get a valuation</div></div></div>
+
+  <div class="honesty"><strong>The honesty rule:</strong> the machine-learning model predicts the price — the LLM only explains it and reads the description. It never invents a number.</div>
+
+  <div class="legend">
+    <span><span class="sw core"></span> data-science core (graded)</span>
+    <span><span class="sw"></span> supporting step</span>
+    <span><span class="sw llm"></span> AI add-on / optional</span>
+  </div>
+  <div class="footer">ISI Summer Internship 2026 · Group 1 · Mentor: Dev Dutta · maps to Modules M0–M10 in the Build Specification</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Specification — AI Property Valuation Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f6f8; --sheet:#ffffff; --ink:#14151a; --ink2:#3a3d47;
+    --dim:#71757f; --faint:#9a9ca6; --line:#ececf1; --line2:#f4f4f7;
+    --teal:#0f9488; --teal-d:#0c7a70; --teal-bg:#e6f6f4; --teal-soft:#f0faf8; --teal-bd:#cdeee9;
+    --amber-bg:#fff7e8; --amber-bd:#f3e2bf; --amber-ink:#9a6b12;
+    --rose-bg:#fdf0ee; --rose-bd:#f6d8d2; --rose-ink:#b04a38;
+    --blue-bg:#eef3fd; --blue-bd:#d3e0f7; --blue-ink:#3a5fa8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .sheet{max-width:940px;margin:0 auto;background:var(--sheet);min-height:100vh;box-shadow:0 0 60px rgba(20,30,60,.06)}
+
+  nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 40px;display:flex;flex-wrap:wrap;gap:5px 18px;align-items:center}
+  nav .brand{font-weight:800;font-size:14px;color:var(--teal-d);margin-right:8px}
+  nav a{font-size:12.5px;color:var(--dim);text-decoration:none;font-weight:500;padding:3px 0;border-bottom:2px solid transparent}
+  nav a:hover{color:var(--teal-d);border-color:var(--teal)}
+
+  header.hero{padding:54px 48px 40px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:16px}
+  h1{font-size:38px;font-weight:800;letter-spacing:-.025em;line-height:1.07}
+  .hero .lede{margin-top:14px;font-size:17px;color:var(--ink2);max-width:700px}
+  .hero .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .fact{font-size:12.5px;font-family:'IBM Plex Mono',monospace;background:var(--teal-soft);border:1px solid var(--teal-bd);color:var(--teal-d);padding:6px 12px;border-radius:30px}
+
+  section{padding:42px 48px;border-bottom:1px solid var(--line2)}
+  .sec-no{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--teal);font-weight:500;letter-spacing:.1em}
+  h2{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0 18px}
+  h3{font-size:16px;font-weight:700;margin:24px 0 8px;color:var(--ink)}
+  h4{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-d);margin:18px 0 7px}
+  p{margin-bottom:12px;color:var(--ink2)}
+  a.link{color:var(--teal-d);text-decoration:none;border-bottom:1px solid var(--teal-bd);font-weight:500}
+  a.link:hover{border-color:var(--teal)}
+  ul,ol{margin:6px 0 14px 4px;padding-left:20px}
+  li{margin-bottom:6px;color:var(--ink2)}
+  strong{color:var(--ink);font-weight:700}
+  code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:#f3f4f7;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:#244}
+  pre{background:#0f1b1a;color:#d7efe9;border-radius:12px;padding:16px 18px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.6;margin:10px 0 16px}
+  pre .c{color:#6f9a92}
+  pre .k{color:#7fd3c4}
+  pre .s{color:#e6c98a}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0 16px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--line2);vertical-align:top}
+  th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);background:#fafbfc;font-weight:600}
+  td b{color:var(--ink)}
+  td code{font-size:12px}
+  tr:last-child td{border-bottom:none}
+
+  .callout{border-radius:12px;padding:14px 18px;margin:14px 0;font-size:14px}
+  .c-teal{background:var(--teal-soft);border:1px solid var(--teal-bd);color:var(--teal-d)}
+  .c-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber-ink)}
+  .c-rose{background:var(--rose-bg);border:1px solid var(--rose-bd);color:var(--rose-ink)}
+  .callout strong{color:inherit}
+
+  /* ===== WIRE DIAGRAM ===== */
+  .wire{margin:22px 0 6px;display:flex;flex-direction:column;align-items:stretch}
+  .mod{display:flex;align-items:center;gap:14px;background:#fff;border:1.5px solid var(--teal-bd);border-radius:12px;padding:13px 16px}
+  .mod .num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;color:#fff;background:var(--teal);min-width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .mod .body{flex:1}
+  .mod .mt{font-weight:700;font-size:14px;color:var(--ink)}
+  .mod .io{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin-top:3px}
+  .mod .io b{color:var(--teal-d);font-weight:600}
+  .mod.core{border-color:var(--teal);background:var(--teal-soft);box-shadow:0 4px 14px rgba(15,148,136,.10)}
+  .mod.opt{border-style:dashed;background:#fafbfc}
+  .mod.opt .num{background:#aab0b8}
+
+  .arrow{display:flex;flex-direction:column;align-items:center;padding:1px 0}
+  .arrow .bar{width:2px;height:11px;background:var(--teal-bd)}
+  .arrow .lbl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;background:var(--teal-bg);color:var(--teal-d);border:1px solid var(--teal-bd);border-radius:30px;padding:2px 11px;margin:1px 0;font-weight:500}
+  .arrow .tri{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--teal)}
+
+  .forknote{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--dim);margin:2px 0 6px}
+  .parallel{display:flex;gap:14px}
+  .parallel .mod{flex:1}
+  @media(max-width:680px){.parallel{flex-direction:column}}
+
+  .mhead{display:flex;align-items:center;gap:12px;margin:6px 0 6px}
+  .mhead .badge{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:12px;color:#fff;background:var(--teal);padding:5px 11px;border-radius:8px}
+  .mhead .badge.opt{background:#aab0b8}
+  .mhead .due{font-size:11.5px;font-family:'IBM Plex Mono',monospace;color:var(--teal-d);background:var(--teal-bg);border:1px solid var(--teal-bd);padding:3px 10px;border-radius:30px;margin-left:auto}
+  @media(max-width:680px){.mhead{flex-wrap:wrap}.mhead .due{margin-left:0}}
+  .done{background:var(--teal-soft);border:1px solid var(--teal-bd);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:13.5px;color:var(--teal-d)}
+  .done b{color:var(--teal-d)}
+  .rep{background:var(--blue-bg);border:1px solid var(--blue-bd);border-left:4px solid var(--blue-ink);border-radius:8px;padding:11px 15px;margin:14px 0;font-size:13.5px;color:var(--blue-ink)}
+  .rep b{color:var(--blue-ink)}
+  hr.mod-sep{border:none;border-top:1px dashed var(--line);margin:34px 0 0}
+
+  footer{padding:30px 48px;color:var(--faint);font-size:12px;font-family:'IBM Plex Mono',monospace}
+
+  @media print{
+    body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    nav{display:none}
+    .sheet{max-width:100%;box-shadow:none}
+    header.hero{padding:30px 40px 28px}
+    section{padding:28px 40px}
+    table,pre,.callout,.done,.rep,.mod,.mhead,.parallel,.core{break-inside:avoid}
+    h1,h2,h3,h4{break-after:avoid}
+    a.link{color:var(--teal-d)}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <nav>
+    <span class="brand">◇ Build Spec</span>
+    <a href="#how">How to use</a>
+    <a href="#wire">Pipeline</a>
+    <a href="#dict">Data dictionary</a>
+    <a href="#rules">Locked rules</a>
+    <a href="#plan">Weekly plan</a>
+    <a href="#modules">Modules</a>
+    <a href="#next">Extensions</a>
+    <a href="#glossary">Glossary</a>
+    <a href="STUDENT_HANDBOOK.html" style="margin-left:auto">↩ Handbook</a>
+  </nav>
+
+  <header class="hero">
+    <div class="eyebrow">ISI Summer Internship 2026 · Group 1 · Build Specification</div>
+    <h1>How to Build the Property<br>Valuation Assistant — Step by Step</h1>
+    <p class="lede">This is your <strong>construction manual</strong>. The Handbook told you <em>what</em> the project is and <em>why</em>. This document tells you <em>exactly how to build it</em> — module by module, what goes in, what comes out, and how each piece connects to the next inside one Colab notebook.</p>
+    <div class="facts">
+      <span class="fact">11 modules · 1 notebook</span>
+      <span class="fact">read top → bottom</span>
+      <span class="fact">companion to the Handbook</span>
+    </div>
+  </header>
+
+  <!-- HOW TO USE -->
+  <section id="how">
+    <div class="sec-no">00</div>
+    <h2>How to use this document</h2>
+    <p>You are building <strong>one Jupyter notebook in Google Colab</strong>. Think of it as a factory line: a spreadsheet of houses enters at the top, and each station (a <strong>module</strong>) does one job and hands its result to the next station. A module is just <strong>one labelled section of the notebook</strong> — usually 1–3 code cells.</p>
+    <div class="callout c-amber"><strong>The golden rule of this project:</strong> the <em>output</em> of one module is the <em>input</em> of the next. The connection between them is always a <strong>named Python variable</strong>. Build the modules <strong>in order</strong> and keep the variable names exactly as written here, and each step will feed cleanly into the next.</div>
+    <h3>How to work through it</h3>
+    <ol>
+      <li>Read the <a class="link" href="#wire">Pipeline diagram</a> once, fully. That is the whole project on one screen.</li>
+      <li>Keep the <a class="link" href="#dict">Data Dictionary</a> open in a second tab — it is the master list of every variable that travels between modules. It is your contract.</li>
+      <li>Build <strong>in order, 0 → 9</strong>. Do not start Module 5 (the first model) before Module 4 has produced <code>X_train</code> and the <code>preprocessor</code>. Module 10 is optional and last.</li>
+      <li>For your assigned module: read its <em>Purpose</em>, copy the <em>Starter code</em> into a cell, run it, then check the <em>"Done when…"</em> box at the bottom before moving on.</li>
+      <li>When something breaks, check <em>Common errors</em> first — your bug is almost certainly listed there.</li>
+    </ol>
+    <div class="callout c-teal"><strong>The starter code is a scaffold, not the finished answer.</strong> It runs, but it is intentionally minimal. Your job — and the part that earns marks — is to understand it, improve it, and explain it in the report. Copying without understanding will show immediately when you present.</div>
+    <div class="callout c-rose"><strong>One example house runs through this whole document.</strong> Meet <strong>"the Maple St house"</strong>: a buyer describes it as <em>a 3-bedroom home, about 1,500 sq ft of living space, built in 2005, overall quality 7, a 2-car garage, 2 full bathrooms</em>. Watch it flow through to a real predicted price (≈ <code>$188,000</code>) at Module 8.</div>
+  </section>
+
+  <!-- WIRE DIAGRAM -->
+  <section id="wire">
+    <div class="sec-no">01</div>
+    <h2>The full pipeline — how everything connects</h2>
+    <p>Every box is a module (a section of the notebook). Every <strong>labelled arrow is the variable</strong> that one module hands to the next. Modules 5 and 6 are <strong>two different models</strong>: they both read the same training data and the same <code>preprocessor</code>, and each produces its own accuracy scores, which meet again at the evaluation step (M7), where you compare them.</p>
+
+    <div class="wire">
+
+      <div class="mod">
+        <span class="num">0</span>
+        <div class="body"><div class="mt">Setup</div>
+        <div class="io">in: <b>—</b> &nbsp;→&nbsp; out: <b>libraries imported</b> (Groq key optional, for M9)</div></div>
+      </div>
+      <div class="arrow"><div class="bar"></div><div class="lbl">environment ready</div><div class="tri"></div></div>
+
+      <div class="mod">
+        <span class="num">1</span>
+        <div class="body"><div class="mt">Load data</div>
+        <div class="io">in: <b>AmesHousing.csv</b> &nbsp;→&nbsp; out: <b>df_raw</b> (2930 × 82)</div></div>
+      </div>
+      <div class="arrow"><div class="bar"></div><div class="lbl">df_raw</div><div class="tri"></div></div>
+
+      <div class="mod">
+        <span class="num">2</span>
+        <div class="body"><div class="mt">Clean &amp; pick features</div>
+        <div class="io">in: <b>df_raw</b> &nbsp;→&nbsp; out: <b>df · X · y</b> (14 features + SalePrice)</div></div>
+      </div>
+      <div class="arrow"><div class="bar"></div><div class="lbl">X · y</div><div class="tri"></div></div>
+
+      <div class="mod">
+        <span class="num">3</span>
+        <div class="body"><div class="mt">Explore the data (EDA)</div>
+        <div class="io">in: <b>df · y</b> &nbsp;→&nbsp; out: <b>charts</b> (no new variable — understanding)</div></div>
+      </div>
+      <div class="arrow"><div class="bar"></div><div class="lbl">X · y</div><div class="tri"></div></div>
+
+      <div class="mod">
+        <span class="num">4</span>
+        <div class="body"><div class="mt">Preprocess + split</div>
+        <div class="io">in: <b>X · y</b> &nbsp;→&nbsp; out: <b>X_train · X_test · y_train · y_test · preprocessor</b></div></div>
+      </div>
+
+      <div class="forknote">↓ &nbsp; the training data + preprocessor go into BOTH models &nbsp; ↓</div>
+      <div class="parallel">
+        <div class="mod core">
+          <span class="num">5</span>
+          <div class="body"><div class="mt">Model A — Linear Regression</div>
+          <div class="io">in: <b>X_train · preprocessor</b><br>out: <b>lr_model · lr_metrics</b></div></div>
+        </div>
+        <div class="mod core">
+          <span class="num">6</span>
+          <div class="body"><div class="mt">Model B — Random Forest</div>
+          <div class="io">in: <b>X_train · preprocessor</b><br>out: <b>rf_model · rf_metrics</b></div></div>
+        </div>
+      </div>
+      <div class="arrow"><div class="bar"></div><div class="lbl">lr_metrics + rf_metrics</div><div class="tri"></div></div>
+
+      <div class="mod core">
+        <span class="num">7</span>
+        <div class="body"><div class="mt">Evaluate, compare &amp; select the final model &nbsp;★ the graded heart</div>
+        <div class="io">in: <b>lr_metrics · rf_metrics · rf_model</b> &nbsp;→&nbsp; out: <b>eval_table · charts · winner · final_model</b></div></div>
+      </div>
+      <div class="arrow"><div class="bar"></div><div class="lbl">final_model</div><div class="tri"></div></div>
+
+      <div class="mod core">
+        <span class="num">8</span>
+        <div class="body"><div class="mt">Predict prices — single house + batch &nbsp;(the app · the payoff)</div>
+        <div class="io">in: <b>final_model · house features</b> &nbsp;→&nbsp; out: <b>a price (one house, or a table of houses)</b></div></div>
+      </div>
+      <div class="arrow"><div class="bar"></div><div class="lbl">predicted price(s)</div><div class="tri"></div></div>
+
+      <div class="mod">
+        <span class="num">9</span>
+        <div class="body"><div class="mt">AI assistant (Groq) — explain a price · describe-a-house</div>
+        <div class="io">in: <b>a prediction (single or batch)</b> &nbsp;→&nbsp; out: <b>plain-English explanation · NL price</b></div></div>
+      </div>
+      <div class="arrow"><div class="bar"></div><div class="lbl">a working assistant</div><div class="tri"></div></div>
+
+      <div class="mod opt">
+        <span class="num">10</span>
+        <div class="body"><div class="mt">Optional UI — the play-around app, only if time allows</div>
+        <div class="io">wraps Modules 8 → 9 in input boxes &nbsp;→&nbsp; out: <b>interactive demo</b></div></div>
+      </div>
+
+    </div>
+
+    <div class="callout c-teal"><strong>Read it as one sentence:</strong> load the houses → pick the columns that matter → look at the data → split &amp; clean it → train two models → pick the better one → <strong>use it to price houses it's never seen (single or in bulk)</strong> → let an LLM explain those prices in plain English.</div>
+  </section>
+
+  <!-- DATA DICTIONARY -->
+  <section id="dict">
+    <div class="sec-no">02</div>
+    <h2>The data dictionary — your contract</h2>
+    <p>These are <strong>every variable that travels between modules</strong>. Spell them exactly like this in your code — that consistency is what lets each module's output feed cleanly into the next as you build the notebook in order.</p>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Created in</th><th>What it holds (example)</th></tr>
+      <tr><td><code>df_raw</code></td><td>DataFrame</td><td>M1</td><td>The CSV exactly as loaded — 2,930 rows × 82 columns, unmodified</td></tr>
+      <tr><td><code>df</code></td><td>DataFrame</td><td>M2</td><td>The cleaned table — 2,925 rows (5 outliers dropped)</td></tr>
+      <tr><td><code>NUMERIC</code></td><td>list[str]</td><td>M2</td><td>The 13 numeric column names (<code>"Overall Qual"</code>, <code>"Gr Liv Area"</code>, …)</td></tr>
+      <tr><td><code>CATEGORICAL</code></td><td>list[str]</td><td>M2</td><td><code>["Neighborhood"]</code></td></tr>
+      <tr><td><code>FEATURES</code></td><td>list[str]</td><td>M2</td><td><code>NUMERIC + CATEGORICAL</code> — the 14 input columns</td></tr>
+      <tr><td><code>TARGET</code></td><td>str</td><td>M2</td><td><code>"SalePrice"</code> — what we predict. <b>Never</b> goes into the features.</td></tr>
+      <tr><td><code>X</code></td><td>DataFrame</td><td>M2</td><td>The 14 feature columns (<code>df[FEATURES]</code>)</td></tr>
+      <tr><td><code>y</code></td><td>Series</td><td>M2</td><td>The SalePrice column (<code>df[TARGET]</code>)</td></tr>
+      <tr><td><code>X_train, X_test</code></td><td>DataFrame</td><td>M4</td><td>The features, split 80% / 20%</td></tr>
+      <tr><td><code>y_train, y_test</code></td><td>Series</td><td>M4</td><td>The prices, split the same way</td></tr>
+      <tr><td><code>preprocessor</code></td><td>ColumnTransformer</td><td>M4</td><td>The recipe that fills gaps, scales numbers, one-hot-encodes Neighborhood</td></tr>
+      <tr><td><code>lr_model</code></td><td>Pipeline</td><td>M5</td><td>Trained <em>preprocessor + Linear Regression</em></td></tr>
+      <tr><td><code>rf_model</code></td><td>Pipeline</td><td>M6</td><td>Trained <em>preprocessor + Random Forest</em></td></tr>
+      <tr><td><code>lr_metrics, rf_metrics</code></td><td>dict</td><td>M5 / M6</td><td><code>{"rmse":…, "mae":…, "r2":…}</code> for each model</td></tr>
+      <tr><td><code>eval_table</code></td><td>DataFrame</td><td>M7</td><td>The two models' RMSE / MAE / R² side by side</td></tr>
+      <tr><td><code>winner</code></td><td>str</td><td>M7</td><td><code>"Random Forest"</code> or <code>"Linear Regression"</code></td></tr>
+      <tr><td><code>final_model</code></td><td>Pipeline</td><td>M7</td><td>The chosen model (= <code>rf_model</code> or <code>lr_model</code>). <b>The app (M8) and assistant (M9) use this one.</b></td></tr>
+      <tr><td><code>value_house()</code></td><td>function</td><td>M8</td><td>Prices one house from a feature dict (missing features → median)</td></tr>
+    </table>
+    <div class="callout c-amber"><strong>Build in order.</strong> The evaluation (M7) cannot run until both models (M5, M6) produce their <code>_metrics</code> dicts. And neither model can train until M4 has produced <code>X_train</code> and <code>preprocessor</code>. Agree the variable names early and never change them silently.</div>
+  </section>
+
+  <!-- LOCKED RULES -->
+  <section id="rules">
+    <div class="sec-no">03</div>
+    <h2>Two rules that are locked — do not redesign these</h2>
+    <p>These two decisions are made <em>for</em> you, because getting them wrong quietly breaks everything downstream. Everything else is yours to design.</p>
+
+    <h3>Rule 1 — Split <em>before</em> you preprocess, and use the same split for both models</h3>
+    <p>This is the single most important methodological rule in the project. Two parts:</p>
+    <div class="callout c-teal"><strong>(a) Split first, then fit cleaning only on the training set.</strong> The 20% test set must stay <em>completely unseen</em> until the very end. If you compute the median (for filling gaps) or the scaling using the whole dataset, information from the test set leaks into training — and your scores come out <strong>falsely high</strong>. The <code>Pipeline</code> in M5/M6 handles this automatically <em>because</em> you split in M4 first.</div>
+    <div class="callout c-teal"><strong>(b) Use the same <code>random_state=42</code> split for both models.</strong> Linear Regression and Random Forest must be judged on the <em>identical</em> train/test rows, or the comparison is meaningless (one model might just have got an easier test set). One split in M4, both models reuse it.</div>
+    <div class="callout c-amber"><strong>And never put <code>SalePrice</code> in <code>X</code>.</strong> If the price is one of the input columns, the model just reads off the answer and scores a perfect — and useless — R²=1.0. <code>y</code> is the price; <code>X</code> is everything else. This is the most common silent "too good to be true" bug.</div>
+
+    <h3>Rule 2 — The honesty guardrail: the model predicts, the LLM explains</h3>
+    <p>House-price prediction is a <strong>regression</strong> problem on numbers. A language model cannot do that fairly — so in this project the <strong>trained model</strong> produces every price, and the <strong>LLM only explains it in words</strong> and reads the user's plain-English description.</p>
+    <div class="callout c-rose"><strong>So:</strong> the M9 prompt explicitly tells the LLM the price is <em>already decided</em> and it must <strong>not</strong> change or re-estimate it. Any framing like "our AI predicts house prices" is an <strong>overclaim</strong> and is barred from your report. The correct framing — and a point worth marks — is: <em>"the machine-learning model predicts; the LLM explains and provides the natural-language interface."</em></div>
+  </section>
+
+  <!-- WEEKLY PLAN -->
+  <section id="plan">
+    <div class="sec-no">04</div>
+    <h2>Weekly plan — what to build, test &amp; demo each week</h2>
+    <p>This is your <strong>sprint plan</strong>. The weeks between Tuesday meetings are your sprints. Each sprint you <strong>build</strong> a set of modules, <strong>test-run</strong> them on the real data, and <strong>demo them working</strong> at the next meeting. Build strictly in order — a later module can't run until the earlier one produces its output.</p>
+    <div class="callout c-teal"><strong>A module is "done" only when</strong> you have (1) run it on the real data, (2) ticked its green <em>"Done when…"</em> box, and (3) can <em>show it working</em> at the next meeting. Code that "should work" but was never run does not count.</div>
+    <table>
+      <tr><th>Sprint</th><th>By this meeting</th><th>Build</th><th>Test-run / demo at the meeting</th></tr>
+      <tr><td><b>—</b></td><td>Mtg 1 · Kickoff · Tue 23 Jun</td><td>Meet · finalise project + roles · Week-1 plan assigned (M0–M2 starts tonight)</td><td>— (no code yet)</td></tr>
+      <tr><td><b>1</b></td><td>Mtg 2 · Tue 30 Jun</td><td>M0 Setup · M1 Load · M2 Clean &amp; pick features</td><td>Notebook opens in Colab · <code>df_raw</code> loads (2930×82) · <code>X</code> is 2925×14 · <code>y</code> is SalePrice</td></tr>
+      <tr><td><b>2</b></td><td>Mtg 3 · Tue 7 Jul</td><td>M3 EDA · M4 Preprocess + split · M5 Linear Regression</td><td>Two EDA charts render · split sizes print · Linear Regression R² prints (~0.88)</td></tr>
+      <tr><td><b>3</b></td><td>Mtg 4 · Tue 14 Jul</td><td>M6 Random Forest · M7 Evaluate, compare &amp; select <code>final_model</code> ★</td><td>Comparison table + charts · you can say which model won, why, and which one you committed to</td></tr>
+      <tr><td><b>4</b></td><td>Mtg 5 · Tue 21 Jul</td><td>M8 Predict app (single + batch) · M9 AI assistant · <strong>feature freeze</strong> · decide on optional M10</td><td>Full end-to-end run: type a house → predicted price → plain-English explanation; a batch of houses priced at once</td></tr>
+      <tr><td><b>5</b></td><td>Mtg 6 · Tue 28 Jul</td><td>(optional M10 UI) · clean the notebook · draft your report sections</td><td>Notebook runs top-to-bottom with no errors · each owner's draft section</td></tr>
+      <tr><td><b>—</b></td><td><b>Fri 31 Jul</b></td><td>—</td><td><b>Submit the final report to ISI</b></td></tr>
+    </table>
+    <div class="callout c-amber"><strong>Timeline reality (read this).</strong> Kickoff (Tue 23 Jun) to deadline (31 Jul) is ≈ <strong>5.5 working weeks across 6 meetings</strong> — tighter than usual because Group 1 started later. That is exactly why scope is lean, why the graded core (M5–M7) lands by Meeting 4, and why you write the report <em>throughout</em>, not at the end. <strong>No new features after the Sprint-4 freeze.</strong> If progress is genuinely on track but time is short, your mentor may request a one-week extension from ISI — do not count on it; plan to finish by 31 Jul.</div>
+  </section>
+
+  <!-- MODULES -->
+  <section id="modules">
+    <div class="sec-no">05</div>
+    <h2>The modules, in build order</h2>
+    <p>Build these in sequence. Each one: <em>what it does → exact inputs → exact outputs → how to build it → worked example → common errors → done-when.</em></p>
+
+    <!-- MODULE 0 -->
+    <div class="mhead"><span class="badge">MODULE 0</span><h3 style="margin:0">Setup &amp; environment</h3><span class="due">🗓 Sprint 1 · Mtg 2</span></div>
+    <p><strong>Purpose.</strong> Import the libraries once, at the top of the notebook. Everything below depends on this cell having run. The Groq key is only needed for M9 — the whole prediction project + app (M1–M8) runs without it.</p>
+    <h4>Input → Output</h4>
+    <table><tr><th>In</th><th>Out</th></tr><tr><td>nothing</td><td>all libraries importable · (optional) <code>GROQ_API_KEY</code> set for M9</td></tr></table>
+    <h4>Starter code</h4>
+    <pre><span class="c"># On Colab, run this once (remove the leading # ):</span>
+<span class="c"># !pip install -q scikit-learn pandas numpy matplotlib joblib groq</span>
+
+<span class="k">import</span> os, json
+<span class="k">import</span> numpy <span class="k">as</span> np
+<span class="k">import</span> pandas <span class="k">as</span> pd
+<span class="k">import</span> matplotlib.pyplot <span class="k">as</span> plt
+
+<span class="k">from</span> sklearn.compose <span class="k">import</span> ColumnTransformer
+<span class="k">from</span> sklearn.ensemble <span class="k">import</span> RandomForestRegressor
+<span class="k">from</span> sklearn.impute <span class="k">import</span> SimpleImputer
+<span class="k">from</span> sklearn.linear_model <span class="k">import</span> LinearRegression
+<span class="k">from</span> sklearn.metrics <span class="k">import</span> mean_absolute_error, mean_squared_error, r2_score
+<span class="k">from</span> sklearn.model_selection <span class="k">import</span> train_test_split
+<span class="k">from</span> sklearn.pipeline <span class="k">import</span> Pipeline
+<span class="k">from</span> sklearn.preprocessing <span class="k">import</span> OneHotEncoder, StandardScaler
+
+<span class="c"># M9 only - paste your free Groq key (console.groq.com, no credit card). Skip for now.</span>
+<span class="c"># os.environ["GROQ_API_KEY"] = "gsk_...your key..."</span>
+<span class="k">print</span>(<span class="s">"setup ok"</span>)</pre>
+    <div class="callout c-rose"><strong>Never commit your API key to GitHub.</strong> Before you push, replace the key with <code>"gsk_...your key..."</code> again, or use Colab's 🔑 Secrets panel. A leaked key gets disabled automatically.</div>
+    <div class="rep"><b>📄 For your report:</b> note your build environment — Google Colab, Python version, and the libraries you used (with versions: <code>pd.__version__</code> etc.). Feeds the report's <em>Setup / Tools</em> section.</div>
+    <div class="done"><b>✅ Done when:</b> the cell runs with no red errors and prints <code>setup ok</code>.</div>
+
+    <hr class="mod-sep">
+
+    <!-- MODULE 1 -->
+    <div class="mhead"><span class="badge">MODULE 1</span><h3 style="margin:0">Load data</h3><span class="due">🗓 Sprint 1 · Mtg 2</span></div>
+    <p><strong>Purpose.</strong> Read the Ames housing CSV into a DataFrame and <em>look at it</em>. Do <em>nothing</em> else here — no cleaning yet. Just get the raw material into memory and confirm what you actually have.</p>
+    <h4>Input → Output</h4>
+    <table>
+      <tr><th>In</th><th>Out</th></tr>
+      <tr><td><code>AmesHousing.csv</code> (uploaded to Colab)</td><td><code>df_raw</code> (DataFrame, 2930 × 82)</td></tr>
+    </table>
+    <div class="callout c-teal"><strong>First, get the file into Colab.</strong> The CSV does not appear by itself — your mentor shares <code>AmesHousing.csv</code> on Teams. Download it, then upload it using the <strong>📁 Files panel</strong> on the left of Colab (drag the CSV in), then read it. The file disappears when the Colab session resets, so re-upload if needed (or load it from your shared Google Drive / GitHub repo).</div>
+    <h4>The dataset — what it is</h4>
+    <p>This is <strong>Dean De Cock's Ames, Iowa housing dataset</strong> — <strong>2,930 home sales</strong>, <strong>82 columns</strong> describing each house (size, quality, year, garage, neighbourhood…), plus the <code>SalePrice</code>. The column names contain <strong>spaces and exact capitals</strong> — e.g. <code>Gr Liv Area</code>, <code>Overall Qual</code>, <code>1st Flr SF</code>. Copy them exactly or pandas raises <code>KeyError</code>.</p>
+    <h4>Starter code</h4>
+    <pre>df_raw = pd.read_csv(<span class="s">"AmesHousing.csv"</span>)
+<span class="k">print</span>(<span class="s">"shape:"</span>, df_raw.shape)                 <span class="c"># expect (2930, 82)</span>
+<span class="k">print</span>(df_raw.columns.tolist()[:12])           <span class="c"># LOOK at the real column names</span>
+df_raw[[<span class="s">"Overall Qual"</span>,<span class="s">"Gr Liv Area"</span>,<span class="s">"Year Built"</span>,<span class="s">"Neighborhood"</span>,<span class="s">"SalePrice"</span>]].head()</pre>
+    <div class="callout c-amber"><strong>Week-1 reality check:</strong> always <code>print(df_raw.shape)</code> and look at the columns before relying on them — never assume. If <code>read_csv</code> raises <code>FileNotFoundError</code>, the file isn't uploaded to this Colab session — re-drag it into the Files panel. Report the real shape at Meeting 2.</div>
+    <div class="rep"><b>📄 For your report:</b> record the dataset source (Dean De Cock, Ames Iowa), its size (2,930 × 82), and the target (<code>SalePrice</code>). Feeds the <em>Data</em> chapter.</div>
+    <div class="done"><b>✅ Done when:</b> <code>df_raw.shape</code> is <code>(2930, 82)</code> and <code>df_raw.head()</code> shows real houses with a <code>SalePrice</code>.</div>
+
+    <hr class="mod-sep">
+
+    <!-- MODULE 2 -->
+    <div class="mhead"><span class="badge">MODULE 2</span><h3 style="margin:0">Clean &amp; pick the feature subset</h3><span class="due">🗓 Sprint 1 · Mtg 2</span></div>
+    <p><strong>Purpose.</strong> Two jobs. (1) Drop the 5 abnormal sales De Cock flags. (2) Choose the <strong>14 high-signal features</strong> instead of all 80, and split the table into <code>X</code> (inputs) and <code>y</code> (the price). Use the <a class="link" href="feature_dictionary.txt">feature dictionary</a> + <code>feature_subset.py</code> we gave you as your starting list.</p>
+    <h4>Input → Output</h4>
+    <table>
+      <tr><th>In</th><th>Out</th></tr>
+      <tr><td><code>df_raw</code></td><td><code>df</code> (clean, 2925 rows) · <code>X</code> (2925 × 14) · <code>y</code> (SalePrice) · the <code>NUMERIC</code>/<code>CATEGORICAL</code>/<code>FEATURES</code> lists</td></tr>
+    </table>
+    <h4>Starter code</h4>
+    <pre><span class="c"># (1) drop De Cock's 5 abnormal large houses (his own documented guidance)</span>
+before = len(df_raw)
+df = df_raw[df_raw[<span class="s">"Gr Liv Area"</span>] &lt;= 4000].copy()
+<span class="k">print</span>(f<span class="s">"dropped {before - len(df)} outliers; rows now {len(df)}"</span>)
+
+<span class="c"># (2) the 14-feature subset (copy from feature_subset.py)</span>
+NUMERIC = [<span class="s">"Overall Qual"</span>,<span class="s">"Gr Liv Area"</span>,<span class="s">"Total Bsmt SF"</span>,<span class="s">"Garage Cars"</span>,<span class="s">"Garage Area"</span>,
+           <span class="s">"Year Built"</span>,<span class="s">"Year Remod/Add"</span>,<span class="s">"Full Bath"</span>,<span class="s">"TotRms AbvGrd"</span>,<span class="s">"1st Flr SF"</span>,
+           <span class="s">"Lot Area"</span>,<span class="s">"Fireplaces"</span>,<span class="s">"Bedroom AbvGr"</span>]
+CATEGORICAL = [<span class="s">"Neighborhood"</span>]
+TARGET   = <span class="s">"SalePrice"</span>
+FEATURES = NUMERIC + CATEGORICAL
+
+X = df[FEATURES].copy()
+y = df[TARGET].copy()
+<span class="k">print</span>(<span class="s">"X:"</span>, X.shape, <span class="s">" y:"</span>, y.shape)</pre>
+    <div class="callout c-teal"><strong>Why drop the 5 houses?</strong> De Cock (who built this dataset) documents 5 sales with <code>Gr Liv Area</code> over 4000 sq ft that sold for far less than their size implies (partial sales / unusual deals). They are genuine oddities that distort a model, so removing them is standard practice for this dataset — and a good honest line for your report.</div>
+    <div class="callout c-amber"><strong>⚠️ Column names are literal.</strong> <code>"Gr Liv Area"</code> has two spaces and that capitalisation; <code>"1st Flr SF"</code> starts with a digit; <code>"Year Remod/Add"</code> has a slash. Copy them <em>exactly</em> from <code>feature_subset.py</code> — a typo gives <code>KeyError: 'Gr liv area'</code>.</div>
+    <h4>Worked example — the real numbers</h4>
+    <p>On the real file this produces: <code>df_raw</code> = <strong>2,930</strong> rows → drop 5 → <code>df</code> = <strong>2,925</strong> rows. <code>X</code> is <strong>2,925 × 14</strong>; <code>y</code> is the 2,925 sale prices. (A handful of cells in <code>Total Bsmt SF</code>, <code>Garage Cars</code>, <code>Garage Area</code> are blank — that's fine, M4 fills them.)</p>
+    <div class="rep"><b>📄 For your report:</b> document the cleaning (5 outliers dropped, why) and list the 14 features you chose <em>and why</em> (the feature dictionary's correlations are good evidence). Note that <code>SalePrice</code> is the target, never an input. Feeds the <em>Data</em> chapter.</div>
+    <div class="done"><b>✅ Done when:</b> <code>X.shape</code> is <code>(2925, 14)</code>, <code>y.shape</code> is <code>(2925,)</code>, and <code>"SalePrice"</code> is <strong>not</strong> in <code>X.columns</code>.</div>
+
+    <hr class="mod-sep">
+
+    <!-- MODULE 3 -->
+    <div class="mhead"><span class="badge">MODULE 3</span><h3 style="margin:0">Explore the data (EDA)</h3><span class="due">🗓 Sprint 2 · Mtg 3</span></div>
+    <p><strong>Purpose.</strong> Before modelling, <em>look</em> at the data. Two charts tell the story: how prices are spread, and which features move most tightly with price. This is where you build intuition for what the model will later confirm.</p>
+    <h4>Input → Output</h4>
+    <table>
+      <tr><th>In</th><th>Out</th></tr>
+      <tr><td><code>df</code> · <code>y</code></td><td>two charts + a printed correlation table (understanding — no new pipeline variable)</td></tr>
+    </table>
+    <h4>Starter code</h4>
+    <pre><span class="c"># chart 1 - how SalePrice is distributed (you'll see it's right-skewed)</span>
+plt.figure(figsize=(6,4))
+plt.hist(y, bins=40, color=<span class="s">"#4C72B0"</span>, edgecolor=<span class="s">"white"</span>)
+plt.title(<span class="s">"SalePrice distribution"</span>); plt.xlabel(<span class="s">"SalePrice ($)"</span>); plt.ylabel(<span class="s">"count"</span>)
+plt.tight_layout(); plt.show()
+
+<span class="c"># chart 2 - which numeric features correlate most with price</span>
+corr = df[NUMERIC + [TARGET]].corr()[TARGET].drop(TARGET).sort_values()
+plt.figure(figsize=(6,5))
+plt.barh(corr.index, corr.values, color=<span class="s">"#55A868"</span>)
+plt.title(<span class="s">"Correlation of each feature with SalePrice"</span>); plt.xlabel(<span class="s">"Pearson r"</span>)
+plt.tight_layout(); plt.show()
+<span class="k">print</span>(corr.sort_values(ascending=<span class="k">False</span>).round(2))</pre>
+    <div class="callout c-teal"><strong>What "correlation" means here, plainly:</strong> a number from −1 to +1 saying how tightly a feature moves with price. <code>Overall Qual</code> (≈ <strong>+0.81</strong>) and <code>Gr Liv Area</code> (≈ <strong>+0.72</strong>) lead — bigger, higher-quality houses cost more. <code>Bedroom AbvGr</code> is surprisingly weak (≈ +0.14): once you know a house's size and quality, the raw bedroom count adds little. That contrast is a great report observation.</div>
+    <div class="rep"><b>📄 For your report:</b> include both charts and 2–3 sentences interpreting them (the skew in prices; the strongest and weakest correlates, and why the weak ones surprised you). Feeds the <em>Data / EDA</em> chapter.</div>
+    <div class="done"><b>✅ Done when:</b> both charts render, and your printed correlation list has <code>Overall Qual</code> at the top.</div>
+
+    <hr class="mod-sep">
+
+    <!-- MODULE 4 -->
+    <div class="mhead"><span class="badge">MODULE 4</span><h3 style="margin:0">Preprocess + split  (the steep one — read slowly)</h3><span class="due">🗓 Sprint 2 · Mtg 3</span></div>
+    <p><strong>Purpose.</strong> Models need clean numbers, and an honest test. So we (a) <strong>split</strong> the data into train/test <em>first</em>, then (b) build a <code>preprocessor</code> recipe that fills blanks, scales numbers, and turns the <code>Neighborhood</code> text into 0/1 columns. We <em>define</em> the recipe here; each model (M5, M6) <em>applies</em> it inside its own pipeline. <strong>This module is given to you as a scaffold — you are not expected to invent it. Understand it and explain it.</strong></p>
+    <h4>Input → Output</h4>
+    <table>
+      <tr><th>In</th><th>Out</th></tr>
+      <tr><td><code>X</code> · <code>y</code></td><td><code>X_train, X_test, y_train, y_test</code> · <code>preprocessor</code></td></tr>
+    </table>
+    <h4>Starter code</h4>
+    <pre>X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="s">0.2</span>, random_state=<span class="s">42</span>)   <span class="c"># SAME seed for both models = fair</span>
+<span class="k">print</span>(f<span class="s">"train={len(X_train)}  test={len(X_test)}"</span>)
+
+<span class="c"># recipe for the 13 numeric columns: fill blanks with the median, then scale</span>
+numeric_pipe = Pipeline([
+    (<span class="s">"impute"</span>, SimpleImputer(strategy=<span class="s">"median"</span>)),
+    (<span class="s">"scale"</span>, StandardScaler()),
+])
+<span class="c"># recipe for Neighborhood: fill blanks, then one-hot encode (text -> 0/1 columns)</span>
+categorical_pipe = Pipeline([
+    (<span class="s">"impute"</span>, SimpleImputer(strategy=<span class="s">"most_frequent"</span>)),
+    (<span class="s">"onehot"</span>, OneHotEncoder(handle_unknown=<span class="s">"ignore"</span>)),
+])
+<span class="c"># bundle both recipes, each pointed at its columns</span>
+preprocessor = ColumnTransformer([
+    (<span class="s">"num"</span>, numeric_pipe, NUMERIC),
+    (<span class="s">"cat"</span>, categorical_pipe, CATEGORICAL),
+])
+<span class="k">print</span>(<span class="s">"preprocessor ready"</span>)</pre>
+    <div class="callout c-teal"><strong>Reading this, piece by piece</strong> (it looks heavy, but it is four simple ideas):<br>
+    • <code>train_test_split(... test_size=0.2, random_state=42)</code> — randomly hold back <strong>20% of houses as a test set</strong> the model never trains on. <code>random_state=42</code> just fixes the shuffle so you get the same split every run (and so both models get the <em>same</em> split — Rule 1).<br>
+    • <code>SimpleImputer(strategy="median")</code> — some cells are blank; <strong>fill each blank with that column's median</strong> value.<br>
+    • <code>StandardScaler()</code> — put every numeric column on the <strong>same scale</strong> (so <code>Lot Area</code> in the thousands doesn't dwarf <code>Overall Qual</code> from 1–10). Linear Regression needs this; it doesn't hurt the forest.<br>
+    • <code>OneHotEncoder()</code> — a model can't do maths on the word <code>"NAmes"</code>, so turn <code>Neighborhood</code> into one 0/1 column per neighbourhood. <code>handle_unknown="ignore"</code> means a neighbourhood not seen in training won't crash it.<br>
+    • <code>ColumnTransformer</code> — applies the numeric recipe to the 13 number columns and the categorical recipe to <code>Neighborhood</code>, in one object.</div>
+    <div class="callout c-amber"><strong>Why split BEFORE building the recipe?</strong> Because the median and the scaling must be learned from the <em>training data only</em>. If they peek at the test set, your scores are fake (Rule 1a). You don't call <code>.fit()</code> here at all — the model's <code>Pipeline</code> in M5/M6 will fit the preprocessor on <code>X_train</code> for you, automatically and correctly.</div>
+    <div class="rep"><b>📄 For your report:</b> explain, in plain words, the train/test split (and why the test set must stay unseen), median-imputation, scaling, and one-hot encoding. This is your <em>Methodology — data preparation</em> section. A clear explanation here earns marks.</div>
+    <div class="done"><b>✅ Done when:</b> it prints <code>train=2340  test=585</code> and <code>preprocessor ready</code> with no error.</div>
+
+    <hr class="mod-sep">
+
+    <!-- MODULE 5 -->
+    <div class="mhead"><span class="badge">MODULE 5</span><h3 style="margin:0">Model A — Linear Regression (the baseline)</h3><span class="due">🗓 Sprint 2 · Mtg 3</span></div>
+    <p><strong>Purpose.</strong> The simplest honest model: fit a straight-line relationship between the features and the price. It is your <strong>baseline</strong> — the yardstick the fancier model must beat. We wrap <code>preprocessor + LinearRegression</code> in one <code>Pipeline</code> so the cleaning is applied automatically and correctly.</p>
+    <h4>New concept — what the three scores mean (read first)</h4>
+    <table>
+      <tr><th>Metric</th><th>In one sentence</th><th>Better is…</th></tr>
+      <tr><td><b>RMSE</b></td><td>typical error in dollars, with big misses punished extra</td><td>lower</td></tr>
+      <tr><td><b>MAE</b></td><td>average error in dollars, plain and simple</td><td>lower</td></tr>
+      <tr><td><b>R²</b></td><td>share of price variation the model explains, 0→1 (1 = perfect)</td><td>higher</td></tr>
+    </table>
+    <h4>Input → Output</h4>
+    <table>
+      <tr><th>In</th><th>Out</th></tr>
+      <tr><td><code>X_train, y_train, X_test, y_test</code> · <code>preprocessor</code></td><td><code>lr_model</code> (trained) · <code>lr_metrics</code> (dict)</td></tr>
+    </table>
+    <h4>Starter code</h4>
+    <pre><span class="k">def</span> rmse(y_true, y_pred):
+    <span class="k">return</span> float(np.sqrt(mean_squared_error(y_true, y_pred)))
+
+lr_model = Pipeline([(<span class="s">"prep"</span>, preprocessor), (<span class="s">"model"</span>, LinearRegression())])
+lr_model.fit(X_train, y_train)                 <span class="c"># fits preprocessor + model together</span>
+lr_pred = lr_model.predict(X_test)
+
+lr_metrics = {<span class="s">"rmse"</span>: rmse(y_test, lr_pred),
+              <span class="s">"mae"</span>:  float(mean_absolute_error(y_test, lr_pred)),
+              <span class="s">"r2"</span>:   float(r2_score(y_test, lr_pred))}
+<span class="k">print</span>(f<span class="s">"Linear Regression  RMSE=${lr_metrics['rmse']:,.0f}  "</span>
+      f<span class="s">"MAE=${lr_metrics['mae']:,.0f}  R2={lr_metrics['r2']:.3f}"</span>)</pre>
+    <div class="callout c-teal"><strong>The one idea that makes this clean:</strong> <code>Pipeline([("prep", preprocessor), ("model", LinearRegression())])</code> glues the cleaning recipe to the model. When you call <code>.fit(X_train, y_train)</code>, it fits the preprocessor on the <em>training</em> rows and then trains the model — so the test set is never touched. That is Rule 1, handled for you.</div>
+    <div class="callout c-amber"><strong>Common error:</strong> <code>NameError: preprocessor is not defined</code> → you haven't run M4. <code>ValueError: Input contains NaN</code> → you're feeding the model raw <code>X</code> instead of going through the pipeline (the pipeline is what fills the blanks).</div>
+    <div class="rep"><b>📄 For your report:</b> explain Linear Regression in plain English, define RMSE/MAE/R², and report this baseline's three numbers. Feeds <em>Methodology (baseline)</em>.</div>
+    <div class="done"><b>✅ Done when:</b> it prints three numbers and the R² is around <strong>0.877</strong>.</div>
+
+    <hr class="mod-sep">
+
+    <!-- MODULE 6 -->
+    <div class="mhead"><span class="badge">MODULE 6</span><h3 style="margin:0">Model B — Random Forest (the smarter one)</h3><span class="due">🗓 Sprint 3 · Mtg 4</span></div>
+    <p><strong>Purpose.</strong> The same task — predict price — but with a model that captures curves and interactions a straight line can't. A <strong>Random Forest</strong> grows hundreds of decision trees on random slices of the data and averages them. The pipeline shape is <em>identical</em> to M5 — only the model line changes.</p>
+    <h4>New concept — a Random Forest in one picture</h4>
+    <p>A single <strong>decision tree</strong> asks yes/no questions ("is Overall Qual ≥ 7? is Gr Liv Area ≥ 1800?") until it lands on a price. One tree alone overfits. A <strong>forest</strong> builds many trees, each on a random subset of rows and features, and averages their answers — so the quirks cancel out and the signal remains. You don't scale for it (trees don't care about scale), but leaving scaling in does no harm, so we keep the same preprocessor.</p>
+    <h4>Input → Output</h4>
+    <table>
+      <tr><th>In</th><th>Out</th></tr>
+      <tr><td><code>X_train, y_train, X_test, y_test</code> · <code>preprocessor</code></td><td><code>rf_model</code> (trained) · <code>rf_metrics</code> (dict)</td></tr>
+    </table>
+    <h4>Starter code</h4>
+    <pre>rf_model = Pipeline([
+    (<span class="s">"prep"</span>, preprocessor),
+    (<span class="s">"model"</span>, RandomForestRegressor(n_estimators=<span class="s">300</span>, random_state=<span class="s">42</span>, n_jobs=-<span class="s">1</span>)),
+])
+rf_model.fit(X_train, y_train)
+rf_pred = rf_model.predict(X_test)
+
+rf_metrics = {<span class="s">"rmse"</span>: rmse(y_test, rf_pred),
+              <span class="s">"mae"</span>:  float(mean_absolute_error(y_test, rf_pred)),
+              <span class="s">"r2"</span>:   float(r2_score(y_test, rf_pred))}
+<span class="k">print</span>(f<span class="s">"Random Forest      RMSE=${rf_metrics['rmse']:,.0f}  "</span>
+      f<span class="s">"MAE=${rf_metrics['mae']:,.0f}  R2={rf_metrics['r2']:.3f}"</span>)</pre>
+    <div class="callout c-teal"><strong>The settings, decoded:</strong> <code>n_estimators=300</code> = grow 300 trees (more = steadier, slower). <code>random_state=42</code> = reproducible. <code>n_jobs=-1</code> = use all CPU cores so it trains faster. Reuse the <em>same</em> <code>rmse</code> helper and the <em>same</em> train/test split from M4/M5 — that's what makes the comparison fair.</div>
+    <div class="callout c-amber"><strong>First run is a little slow</strong> (300 trees on 2,340 houses) — a few seconds, normal. If R² comes out <em>worse</em> than Linear Regression, something is off (usually a different/re-done split) — both models must use the M4 split.</div>
+    <div class="rep"><b>📄 For your report:</b> explain a decision tree → a forest in your own words, and report this model's three numbers next to the baseline. Feeds <em>Methodology (Random Forest)</em>.</div>
+    <div class="done"><b>✅ Done when:</b> it prints three numbers and the R² (≈ <strong>0.919</strong>) is <em>higher</em> than Linear Regression's.</div>
+
+    <hr class="mod-sep">
+
+    <!-- MODULE 7 -->
+    <div class="mhead"><span class="badge">MODULE 7</span><h3 style="margin:0">Evaluate, compare &amp; select the final model ★</h3><span class="due">🗓 Sprint 3 · Mtg 4</span></div>
+    <p><strong>Purpose.</strong> This is the graded heart of the project. Put both models side by side, <strong>decide which one wins</strong> by R², and <strong>commit to it</strong> as <code>final_model</code> — the single model the app (M8) and the assistant (M9) will use. Then read <strong>which features the Random Forest leaned on</strong>. Outputs: a comparison table, the decision, two charts.</p>
+    <h4>Input → Output</h4>
+    <table>
+      <tr><th>In</th><th>Out</th></tr>
+      <tr><td><code>lr_metrics</code> · <code>rf_metrics</code> · <code>lr_model</code> · <code>rf_model</code> · <code>y_test</code> · <code>rf_pred</code></td><td><code>eval_table</code> · <code>winner</code> · <code>final_model</code> · two charts</td></tr>
+    </table>
+    <h4>Starter code</h4>
+    <pre>eval_table = pd.DataFrame({
+    <span class="s">"model"</span>: [<span class="s">"Linear Regression"</span>, <span class="s">"Random Forest"</span>],
+    <span class="s">"RMSE"</span>:  [lr_metrics[<span class="s">"rmse"</span>], rf_metrics[<span class="s">"rmse"</span>]],
+    <span class="s">"MAE"</span>:   [lr_metrics[<span class="s">"mae"</span>],  rf_metrics[<span class="s">"mae"</span>]],
+    <span class="s">"R2"</span>:    [lr_metrics[<span class="s">"r2"</span>],   rf_metrics[<span class="s">"r2"</span>]],
+})
+winner = <span class="s">"Random Forest"</span> <span class="k">if</span> rf_metrics[<span class="s">"r2"</span>] &gt; lr_metrics[<span class="s">"r2"</span>] <span class="k">else</span> <span class="s">"Linear Regression"</span>
+<span class="k">print</span>(eval_table.round(3).to_string(index=<span class="k">False</span>)); <span class="k">print</span>(<span class="s">"winner:"</span>, winner)
+
+<span class="c"># THE DECISION: commit to the winner. M8 (app) and M9 (LLM) use final_model.</span>
+final_model = rf_model <span class="k">if</span> winner == <span class="s">"Random Forest"</span> <span class="k">else</span> lr_model
+<span class="k">print</span>(<span class="s">"final_model ->"</span>, winner)
+
+<span class="c"># which features mattered (read straight from the trained forest)</span>
+feat_names  = rf_model.named_steps[<span class="s">"prep"</span>].get_feature_names_out()
+importances = rf_model.named_steps[<span class="s">"model"</span>].feature_importances_
+top = pd.Series(importances, index=feat_names).sort_values(ascending=<span class="k">False</span>).head(10)
+
+plt.figure(figsize=(6,5))
+plt.barh(top.index[::-<span class="s">1</span>], top.values[::-<span class="s">1</span>], color=<span class="s">"#C44E52"</span>)
+plt.title(<span class="s">"Random Forest - top-10 feature importances"</span>); plt.xlabel(<span class="s">"importance"</span>)
+plt.tight_layout(); plt.show()
+
+plt.figure(figsize=(5,5))                          <span class="c"># actual vs predicted: tight = good</span>
+plt.scatter(y_test, rf_pred, alpha=<span class="s">0.4</span>, color=<span class="s">"#4C72B0"</span>, edgecolor=<span class="s">"none"</span>)
+lims = [y_test.min(), y_test.max()]; plt.plot(lims, lims, <span class="s">"k--"</span>)
+plt.title(<span class="s">"Random Forest - actual vs predicted"</span>); plt.xlabel(<span class="s">"actual"</span>); plt.ylabel(<span class="s">"predicted"</span>)
+plt.tight_layout(); plt.show()</pre>
+    <div class="callout c-teal"><strong>The dense line, decoded:</strong> <code>rf_model.named_steps["model"].feature_importances_</code> — a trained forest records <strong>how much each feature reduced its prediction error</strong>; that's the "importance". <code>get_feature_names_out()</code> gives the matching names (one-hot makes many <code>Neighborhood_*</code> columns, so names are prefixed <code>num__</code>/<code>cat__</code>). <code>.sort_values(...).head(10)</code> keeps the top 10. The <strong>actual-vs-predicted</strong> scatter: points hugging the dashed diagonal = accurate predictions.</div>
+    <div class="callout c-amber"><strong>Verified result to expect:</strong> Random Forest wins — R² <strong>0.919</strong> vs <strong>0.877</strong>; RMSE <strong>$24,011</strong> vs <strong>$29,581</strong>. Top driver by far: <code>Overall Qual</code> (≈ <strong>0.62</strong>), then <code>Gr Liv Area</code> (≈ 0.14). If your numbers are wildly different, check you used the M4 split for both models.</div>
+    <div class="callout c-teal"><strong>Go further for more marks:</strong> the headline single number can flatter a model. Dig deeper — plot the <em>residuals</em> (errors) to see where the model struggles (it tends to under-predict the most expensive homes), report error in <em>percentage</em> terms, or test how the ranking changes if you add more features. <em>This is where your ambition belongs.</em></div>
+    <div class="rep"><b>📄 For your report — this is your <em>Results</em> chapter:</b> paste <code>eval_table</code>, both charts, and 3–4 sentences on <em>which model won, by how much, and why</em> (a forest captures non-linear effects a line can't), then state <em>which model you committed to and why</em>. Discuss what the importance chart says about the housing market (quality + size dominate). This section carries the most marks — invest here.</div>
+    <div class="done"><b>✅ Done when:</b> <code>eval_table</code> shows both models' three scores, both charts render, <code>winner</code> holds <code>"Random Forest"</code>, and <code>final_model</code> is set to the winning pipeline.</div>
+
+    <hr class="mod-sep">
+
+    <!-- MODULE 8 -->
+    <div class="mhead"><span class="badge">MODULE 8</span><h3 style="margin:0">Predict prices with your model — the valuation app (single + batch)</h3><span class="due">🗓 Sprint 4 · Mtg 5</span></div>
+    <p><strong>Purpose — this is the payoff.</strong> Everything so far <em>built and chose</em> a model. Now you <strong>use</strong> it: feed it a house it has never seen and get a price. That is the whole point of the project — a buyer, seller, or bank could type in a house's features and get an instant estimate. Two modes: <strong>(1) single house</strong> — specify a few features, get one price; <strong>(2) batch</strong> — hand it a whole table of houses, get a price for every row.</p>
+    <div class="callout c-teal"><strong>Why this module matters most for <em>understanding</em>:</strong> a model you only score with R² is an abstraction. A model you can <em>poke</em> — change <code>Overall Qual</code> from 6 to 8 and watch the price jump — is where you actually feel what it learned. Play with it.</div>
+    <h4>Input → Output</h4>
+    <table>
+      <tr><th>In</th><th>Out</th></tr>
+      <tr><td><code>final_model</code> · a house (a feature dict) or a table of houses</td><td>a predicted price (single) · a price column on the table (batch)</td></tr>
+    </table>
+    <h4>Starter code</h4>
+    <pre><span class="c"># sensible fallbacks for any feature the user doesn't specify</span>
+defaults = {c: float(X[c].median()) <span class="k">for</span> c <span class="k">in</span> NUMERIC}
+defaults[<span class="s">"Neighborhood"</span>] = X[<span class="s">"Neighborhood"</span>].mode().iloc[<span class="s">0</span>]
+neighborhoods = sorted(X[<span class="s">"Neighborhood"</span>].unique())
+
+<span class="k">def</span> value_house(features):
+    <span class="c"># features overrides defaults; anything not given falls back to the median</span>
+    row = {**defaults, **{k: v <span class="k">for</span> k, v <span class="k">in</span> features.items() <span class="k">if</span> k <span class="k">in</span> FEATURES}}
+    <span class="k">return</span> float(final_model.predict(pd.DataFrame([row])[FEATURES])[<span class="s">0</span>])
+
+<span class="c"># MODE 1 - single house: edit these and re-run to play around</span>
+my_house = {<span class="s">"Overall Qual"</span>: <span class="s">7</span>, <span class="s">"Gr Liv Area"</span>: <span class="s">1500</span>, <span class="s">"Year Built"</span>: <span class="s">2005</span>,
+            <span class="s">"Garage Cars"</span>: <span class="s">2</span>, <span class="s">"Full Bath"</span>: <span class="s">2</span>, <span class="s">"Bedroom AbvGr"</span>: <span class="s">3</span>}
+<span class="k">print</span>(f<span class="s">"single-house estimate: ${value_house(my_house):,.0f}"</span>)   <span class="c"># -> about $188,000</span>
+
+<span class="c"># MODE 2 - batch: a whole table of houses at once</span>
+batch = X_test.head(<span class="s">5</span>).copy()                <span class="c"># or build your own DataFrame of houses</span>
+batch[<span class="s">"predicted_price"</span>] = final_model.predict(batch)
+<span class="k">print</span>(batch[[<span class="s">"Overall Qual"</span>,<span class="s">"Gr Liv Area"</span>,<span class="s">"Neighborhood"</span>,<span class="s">"predicted_price"</span>]].to_string(index=<span class="k">False</span>))</pre>
+    <div class="callout c-teal"><strong>How <code>value_house()</code> works:</strong> you pass only the features you care about (say quality + size); it fills every other feature with that column's median, builds a one-row DataFrame in the exact <code>FEATURES</code> order, and asks <code>final_model</code> for a price. Batch mode is even simpler — a Pipeline can <code>.predict()</code> a whole table at once, so you just attach the result as a new column.</div>
+    <div class="callout c-amber"><strong>Common error:</strong> <code>KeyError</code> or a column-order crash → your house dict / table must use the <em>exact</em> feature names (and batch tables must contain all 14 <code>FEATURES</code> columns). Reuse <code>defaults</code> + <code>FEATURES</code> and it lines up.</div>
+    <div class="rep"><b>📄 For your report:</b> show one single-house prediction and one batch table, and write 2–3 sentences on the <em>use case</em> — who would use this and why an instant estimate is valuable. This is your <em>"utility of the model"</em> discussion. Feeds <em>Results / Discussion</em>.</div>
+    <div class="done"><b>✅ Done when:</b> <code>value_house(my_house)</code> returns a sensible price (≈ $188,000 for the example), and the batch table shows a <code>predicted_price</code> for every row.</div>
+
+    <hr class="mod-sep">
+
+    <!-- MODULE 9 -->
+    <div class="mhead"><span class="badge">MODULE 9</span><h3 style="margin:0">AI assistant — explain a price &amp; describe-a-house (Groq)</h3><span class="due">🗓 Sprint 4 · Mtg 5</span></div>
+    <p><strong>Purpose.</strong> Put a friendly AI layer on top of the predictions from M8. Two features: (1) the model has priced a house, and the <strong>LLM explains <em>why</em> in plain English</strong> (works for a single house or each house in a batch); (2) a user <strong>describes a house in words</strong>, the LLM turns that into features, and the <strong>model</strong> prices it via <code>value_house()</code>. Remember <a class="link" href="#rules">Rule 2</a>: the model predicts, the LLM only explains and interfaces.</p>
+    <h4>Input → Output</h4>
+    <table>
+      <tr><th>In</th><th>Out</th></tr>
+      <tr><td><code>final_model</code> · a prediction from M8 (single or batch) or free text · <code>GROQ_API_KEY</code></td><td>a plain-English explanation · a price for a described house</td></tr>
+    </table>
+    <h4>Starter code</h4>
+    <pre><span class="k">from</span> groq <span class="k">import</span> Groq
+client = Groq(api_key=os.environ[<span class="s">"GROQ_API_KEY"</span>])
+GROQ_MODEL = <span class="s">"llama-3.3-70b-versatile"</span>   <span class="c"># verify current models at console.groq.com/docs/models</span>
+
+<span class="c"># the model's top drivers, cleaned of the num__/cat__ prefixes (from M7's `top`)</span>
+drivers = [n.replace(<span class="s">"num__"</span>,<span class="s">""</span>).replace(<span class="s">"cat__"</span>,<span class="s">""</span>) <span class="k">for</span> n <span class="k">in</span> top.index[:<span class="s">4</span>]]
+
+<span class="k">def</span> explain_valuation(house, predicted_price, drivers):
+    facts = <span class="s">"\n"</span>.join(f<span class="s">"- {k}: {v}"</span> <span class="k">for</span> k, v <span class="k">in</span> house.items())
+    prompt = (
+        <span class="s">"You are a property-valuation assistant. A machine-learning model has ALREADY "</span>
+        f<span class="s">"estimated this house's price at ${predicted_price:,.0f}. Do NOT change or "</span>
+        <span class="s">"re-estimate the price. In 3-4 sentences, explain to a buyer why it lands near "</span>
+        f<span class="s">"that figure, using its attributes and the model's main drivers "</span>
+        f<span class="s">"({', '.join(drivers)}).\n\nAttributes:\n{facts}"</span>)
+    resp = client.chat.completions.create(
+        model=GROQ_MODEL, messages=[{<span class="s">"role"</span>:<span class="s">"user"</span>,<span class="s">"content"</span>:prompt}], temperature=<span class="s">0.3</span>)
+    <span class="k">return</span> resp.choices[<span class="s">0</span>].message.content.strip()
+
+<span class="c"># DEMO - explain the single house you priced in M8</span>
+sample = my_house
+sample_price = value_house(my_house)
+<span class="k">print</span>(explain_valuation(sample, sample_price, drivers))
+
+<span class="c"># BATCH - explain each row of the M8 batch table (loop over predictions)</span>
+<span class="k">for</span> _, h <span class="k">in</span> batch.iterrows():
+    <span class="k">print</span>(f<span class="s">"${h['predicted_price']:,.0f}:"</span>, explain_valuation(h[FEATURES].to_dict(), h[<span class="s">"predicted_price"</span>], drivers)[:<span class="s">120</span>], <span class="s">"..."</span>)</pre>
+    <div class="callout c-rose"><strong>The honesty guardrail, in code.</strong> Notice the prompt says <em>"a model has ALREADY estimated… Do NOT change or re-estimate the price."</em> That single instruction is what keeps the LLM in its lane — explaining, not guessing prices. Keep it. In your report, state clearly that the model predicts and the LLM explains.</div>
+    <h4>Optional second feature — describe a house in words → a price</h4>
+    <pre><span class="k">def</span> parse_house_text(text, allowed_neighborhoods):
+    prompt = (
+        <span class="s">"Extract house attributes from the user's text. Return ONLY JSON with the keys "</span>
+        <span class="s">"you can infer (omit unknown): Overall Qual, Gr Liv Area, Garage Cars, Year Built, "</span>
+        f<span class="s">"Full Bath, Bedroom AbvGr, Neighborhood (one of: {', '.join(allowed_neighborhoods)}).\n\n"</span>
+        f<span class="s">"User: {text}"</span>)
+    resp = client.chat.completions.create(
+        model=GROQ_MODEL, messages=[{<span class="s">"role"</span>:<span class="s">"user"</span>,<span class="s">"content"</span>:prompt}],
+        temperature=<span class="s">0</span>, response_format={<span class="s">"type"</span>:<span class="s">"json_object"</span>})
+    <span class="k">return</span> json.loads(resp.choices[<span class="s">0</span>].message.content)
+
+<span class="c"># reuse M8's value_house() + neighborhoods - free text -> features -> price</span>
+text   = <span class="s">"A 3-bedroom house, ~1500 sq ft, built 2005, overall quality 7, 2-car garage, 2 full baths."</span>
+parsed = parse_house_text(text, neighborhoods)
+price  = value_house(parsed)                     <span class="c"># the Maple St house -> about $188,000</span>
+<span class="k">print</span>(<span class="s">"predicted:"</span>, f<span class="s">"${price:,.0f}"</span>)
+<span class="k">print</span>(explain_valuation(parsed, price, drivers))</pre>
+    <div class="callout c-amber"><strong>Auth error / <code>KeyError: 'GROQ_API_KEY'</code>?</strong> Your key isn't loaded — set it in the M0 cell and re-run M0. <strong>"model not found"?</strong> The model name was retired; check current free models at <code>console.groq.com/docs/models</code> and swap it in. Do not guess names.</div>
+    <div class="callout c-teal"><strong>The assistant is an add-on, not load-bearing.</strong> If the Groq call fails on demo day, your prediction study + app (M1–M8) still stands on its own and still earns the marks. That is by design.</div>
+    <div class="rep"><b>📄 For your report:</b> include one real explanation and one describe-a-house example (with its predicted price), and 2–3 sentences on what the LLM adds and its limits — and restate the honesty guardrail (model predicts, LLM explains). Feeds the <em>AI assistant / Conclusion</em> section.</div>
+    <div class="done"><b>✅ Done when:</b> the LLM prints a 3–4 sentence explanation that does <em>not</em> state a different price, and (if attempted) the described house gets a sensible predicted price.</div>
+
+    <hr class="mod-sep">
+
+    <!-- MODULE 10 -->
+    <div class="mhead"><span class="badge opt">MODULE 10</span><h3 style="margin:0">Optional UI — the play-around app, only if everything else is done</h3><span class="due">🗓 Sprint 5 · optional</span></div>
+    <p><strong>Purpose.</strong> Wrap Modules 8→9 behind simple input boxes so a non-coder can try it — type a house, see a price and an explanation. <strong>Do not start this until the notebook is complete and the report is drafted.</strong> It earns no extra marks on its own — it is a demo nicety on top of the app you already built in M8.</p>
+    <div class="callout c-teal">Simplest path: <strong><code>ipywidgets</code></strong> inside the notebook — a text box for the house description (or sliders for the key features) and a button that runs the model + the explainer. A <code>streamlit</code> app is also fine but is more work and optional.</div>
+    <h4>Sketch — inside the notebook</h4>
+    <pre><span class="k">import</span> ipywidgets <span class="k">as</span> widgets
+desc = widgets.Textarea(description=<span class="s">"Describe the house:"</span>)
+hood = widgets.Dropdown(options=neighborhoods, description=<span class="s">"Neighborhood:"</span>)
+go   = widgets.Button(description=<span class="s">"Value it"</span>)
+display(desc, hood, go)
+<span class="c"># on click: parse_house_text(desc.value) -> model.predict -> explain_valuation</span></pre>
+    <div class="callout c-rose"><strong>Reuse Rule 2's spirit:</strong> the UI must still let the <em>model</em> produce the price — the text box only describes the house. Never present an LLM-typed number as the price.</div>
+    <div class="rep"><b>📄 For your report:</b> if you built it, add a screenshot and a line on how it works. If you didn't, list it as <em>future work</em> in the Conclusion — a perfectly good outcome.</div>
+    <div class="done"><b>✅ Done when:</b> (only if attempted) entering a description + clicking the button prints a predicted price and an explanation.</div>
+  </section>
+
+  <!-- WHERE THIS GOES NEXT -->
+  <section id="next">
+    <div class="sec-no">06</div>
+    <h2>Where this goes next (extensions — after the project)</h2>
+    <p>What you built is not a one-off. The pipeline — <em>load → pick features → split &amp; clean → train models → compare &amp; pick a winner → predict → explain</em> — is a <strong>reusable template</strong>. Two directions worth exploring once the project is submitted:</p>
+
+    <h3>1 · Same problem, your own data — an Indian housing dataset</h3>
+    <p>Nothing here is specific to Ames, Iowa. To value <strong>Bengaluru or other Indian homes</strong>, swap in an Indian housing CSV (several are on Kaggle), point M1 at it, and adjust the feature names in M2 to that file's columns. <em>Everything from M3 onward is unchanged.</em></p>
+    <div class="callout c-amber"><strong>Honest heads-up:</strong> Indian housing data is usually messier than the clean Ames file — more missing values, prices in lakhs/crores, locality as free text. That's exactly why we learned on Ames first: get the method solid on clean data, then take it somewhere harder. A great post-project challenge, not part of the graded scope.</div>
+
+    <h3>2 · Same recipe, completely different problems</h3>
+    <p>The bigger idea: this <em>workflow</em> predicts far more than house prices. Anywhere you have past examples with an outcome, you can train, compare, and use a model the same way:</p>
+    <table>
+      <tr><th>Problem</th><th>Predict…</th><th>What changes</th></tr>
+      <tr><td><b>Customer churn</b></td><td>will this customer leave? (yes/no)</td><td>a <em>classification</em> task — swap <code>RandomForestRegressor</code> → <code>RandomForestClassifier</code>, and R²/RMSE → accuracy / precision / recall</td></tr>
+      <tr><td><b>Employee attrition</b></td><td>will this employee resign? (yes/no)</td><td>same classification swap; features become tenure, salary band, role, etc.</td></tr>
+      <tr><td><b>Loan default</b></td><td>will this loan go bad? (yes/no)</td><td>same; plus you'd care a lot about precision/recall, not just accuracy</td></tr>
+      <tr><td><b>Demand / sales</b></td><td>how many units next month? (a number)</td><td>still <em>regression</em> — almost identical to this project</td></tr>
+    </table>
+    <div class="callout c-teal"><strong>The one honest distinction:</strong> house price is a <em>number</em>, so this is <strong>regression</strong>. Churn / attrition / default are <em>yes-or-no</em>, so they're <strong>classification</strong> — you change the model family and the metrics, but the <em>shape</em> of the pipeline (load → features → split → train → compare → predict → explain) is identical. Learn it once here; reuse it everywhere. A strong line for your report's <em>Future Work</em>.</div>
+  </section>
+
+  <!-- GLOSSARY -->
+  <section id="glossary">
+    <div class="sec-no">07</div>
+    <h2>Plain-English glossary</h2>
+    <table>
+      <tr><th>Term</th><th>In one sentence</th></tr>
+      <tr><td><b>Regression</b></td><td>Predicting a number (here, a price) from input features.</td></tr>
+      <tr><td><b>Classification</b></td><td>Predicting a category instead of a number (e.g. will-churn yes/no). Same workflow, different model family + metrics — see §06.</td></tr>
+      <tr><td><b>Final model</b></td><td>The single model you commit to after comparing (M7) — the one your app uses.</td></tr>
+      <tr><td><b>Feature / target</b></td><td>A feature is an input column (size, quality…); the target is what you predict (<code>SalePrice</code>).</td></tr>
+      <tr><td><b>Train / test split</b></td><td>Holding back some rows the model never trains on, so you can measure how it does on unseen houses.</td></tr>
+      <tr><td><b>Data leakage</b></td><td>Letting test-set (or answer) information sneak into training — it makes scores look great but fake.</td></tr>
+      <tr><td><b>Imputation</b></td><td>Filling in missing values (here, with the column median).</td></tr>
+      <tr><td><b>Scaling</b></td><td>Putting numeric columns on a comparable scale so big-numbered features don't dominate.</td></tr>
+      <tr><td><b>One-hot encoding</b></td><td>Turning a text category (Neighborhood) into a set of 0/1 columns a model can use.</td></tr>
+      <tr><td><b>Linear Regression</b></td><td>The baseline model: fits a straight-line relationship between features and price.</td></tr>
+      <tr><td><b>Random Forest</b></td><td>Many decision trees averaged together — captures curves and interactions a line can't.</td></tr>
+      <tr><td><b>RMSE / MAE</b></td><td>Average prediction error in dollars (RMSE punishes big misses more). Lower is better.</td></tr>
+      <tr><td><b>R²</b></td><td>Share of price variation the model explains, 0→1. Higher is better.</td></tr>
+      <tr><td><b>Feature importance</b></td><td>How much each feature helped the forest reduce its error — which inputs mattered most.</td></tr>
+    </table>
+  </section>
+
+  <footer>
+    ISI Summer Internship 2026 · Group 1 · Build Specification · Mentor: Dev Dutta · v1 · companion to the Student Handbook
+  </footer>
+
+</div>
+</body>
+</html>
