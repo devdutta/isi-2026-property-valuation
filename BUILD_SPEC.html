@@ -338,10 +338,10 @@
 <span class="k">from</span> sklearn.pipeline <span class="k">import</span> Pipeline
 <span class="k">from</span> sklearn.preprocessing <span class="k">import</span> OneHotEncoder, StandardScaler
 
-<span class="c"># M9 only - paste your free Groq key (console.groq.com, no credit card). Skip for now.</span>
-<span class="c"># os.environ["GROQ_API_KEY"] = "gsk_...your key..."</span>
+<span class="c"># The Groq key is needed only for M9 - skip it for now.</span>
+<span class="c"># When you reach M9, store it as a Colab Secret (full steps + screenshot are in M9).</span>
 <span class="k">print</span>(<span class="s">"setup ok"</span>)</pre>
-    <div class="callout c-rose"><strong>Never commit your API key to GitHub.</strong> Before you push, replace the key with <code>"gsk_...your key..."</code> again, or use Colab's 🔑 Secrets panel. A leaked key gets disabled automatically.</div>
+    <div class="callout c-teal"><strong>About the Groq key:</strong> you only need it for <strong>M9</strong> (the AI explanation) — M1–M8 run completely without it. When you reach M9, you'll store the key as a <strong>Colab Secret</strong> (never pasted into a code cell) using the step-by-step guide in that module.</div>
     <div class="rep"><b>📄 For your report:</b> note your build environment — Google Colab, Python version, and the libraries you used (with versions: <code>pd.__version__</code> etc.). Feeds the report's <em>Setup / Tools</em> section.</div>
     <div class="done"><b>✅ Done when:</b> the cell runs with no red errors and prints <code>setup ok</code>.</div>
 
@@ -626,9 +626,40 @@ batch[<span class="s">"predicted_price"</span>] = final_model.predict(batch)
       <tr><th>In</th><th>Out</th></tr>
       <tr><td><code>final_model</code> · a prediction from M8 (single or batch) or free text · <code>GROQ_API_KEY</code></td><td>a plain-English explanation · a price for a described house</td></tr>
     </table>
+
+    <h4>First: get your Groq key and store it as a Colab Secret</h4>
+    <div class="callout c-teal"><strong>This module needs a free Groq API key</strong> — and the safe place to keep it is Colab's 🔑 <strong>Secrets</strong> panel, <em>not</em> typed into a code cell (a key typed in a cell gets pushed to GitHub and disabled). Two steps:
+
+    <p style="margin:12px 0 4px"><strong>Part A — Create your free Groq key</strong> (no credit card):</p>
+    <ol style="margin:0">
+      <li>Go to <a class="link" href="https://console.groq.com">https://console.groq.com</a> and sign up for a free account.</li>
+      <li>In the left sidebar, click <strong>API Keys</strong>.</li>
+      <li>Click <strong>Create API Key</strong>, give it a name (e.g. <code>ISI Property Valuation</code>), and create it.</li>
+      <li><strong>Copy the key immediately</strong> — it starts with <code>gsk_</code> and is shown <em>only once</em>. If you lose it, just create another.</li>
+    </ol>
+
+    <p style="margin:12px 0 4px"><strong>Part B — Add it as a Colab Secret named <code>GROQ_API_KEY</code></strong>:</p>
+    <ol style="margin:0">
+      <li>In your Colab notebook, click the 🔑 key icon in the far-left sidebar to open <strong>Secrets</strong>.</li>
+      <li>Click <strong>+ Add new secret</strong>.</li>
+      <li>In <strong>Name</strong>, type <code>GROQ_API_KEY</code> exactly (all caps, with underscores — the code looks for this exact name).</li>
+      <li>In <strong>Value</strong>, paste your <code>gsk_…</code> key.</li>
+      <li>Turn the <strong>Notebook access</strong> toggle (left of the row) <strong>ON</strong> — without this, your notebook cannot read the secret.</li>
+    </ol>
+    </div>
+
+    <figure style="margin:14px 0;text-align:center">
+      <img src="assets/colab_secret_groq_row.png" alt="A GROQ_API_KEY row in Colab's Secrets panel" style="max-width:420px;width:100%;border:1px solid #d8d8d8;border-radius:6px;padding:6px;background:#1e1e1e">
+      <figcaption style="font-size:0.82rem;color:#666;margin-top:8px;line-height:1.5">The <code>GROQ_API_KEY</code> row in Colab's 🔑 Secrets panel. <strong>Note this crop is only half-done</strong> — to finish, you must <strong>paste your <code>gsk_…</code> value</strong> into the empty Value box <em>and</em> switch the <strong>Notebook access toggle (far left) ON</strong>. It only works once <em>both</em> are set.</figcaption>
+    </figure>
+
     <h4>Starter code</h4>
-    <pre><span class="k">from</span> groq <span class="k">import</span> Groq
-client = Groq(api_key=os.environ[<span class="s">"GROQ_API_KEY"</span>])
+    <pre><span class="c"># load your Groq key from the Colab Secret into the environment</span>
+<span class="k">from</span> google.colab <span class="k">import</span> userdata
+os.environ[<span class="s">"GROQ_API_KEY"</span>] = userdata.get(<span class="s">"GROQ_API_KEY"</span>)
+
+<span class="k">from</span> groq <span class="k">import</span> Groq
+client = Groq()   <span class="c"># automatically reads GROQ_API_KEY from the environment</span>
 GROQ_MODEL = <span class="s">"llama-3.3-70b-versatile"</span>   <span class="c"># verify current models at console.groq.com/docs/models</span>
 
 <span class="c"># the model's top drivers, cleaned of the num__/cat__ prefixes (from M7's `top`)</span>
@@ -673,7 +704,7 @@ parsed = parse_house_text(text, neighborhoods)
 price  = value_house(parsed)                     <span class="c"># the Maple St house -> about $188,000</span>
 <span class="k">print</span>(<span class="s">"predicted:"</span>, f<span class="s">"${price:,.0f}"</span>)
 <span class="k">print</span>(explain_valuation(parsed, price, drivers))</pre>
-    <div class="callout c-amber"><strong>Auth error / <code>KeyError: 'GROQ_API_KEY'</code>?</strong> Your key isn't loaded — set it in the M0 cell and re-run M0. <strong>"model not found"?</strong> The model name was retired; check current free models at <code>console.groq.com/docs/models</code> and swap it in. Do not guess names.</div>
+    <div class="callout c-amber"><strong>Auth error / <code>GroqError: api_key must be set</code> / <code>KeyError: 'GROQ_API_KEY'</code>?</strong> Two common causes: (1) the secret must be named exactly <code>GROQ_API_KEY</code> — not <code>GROQ</code>; (2) a Colab Secret does <em>not</em> appear in <code>os.environ</code> on its own — you must pull it in with <code>userdata.get("GROQ_API_KEY")</code> as shown above (<code>os.environ.get(...)</code> alone returns <code>None</code>). Re-run this cell after setting the secret. <strong>"model not found"?</strong> The model name was retired; check current free models at <code>console.groq.com/docs/models</code> and swap it in. Do not guess names.</div>
     <div class="callout c-teal"><strong>The assistant is an add-on, not load-bearing.</strong> If the Groq call fails on demo day, your prediction study + app (M1–M8) still stands on its own and still earns the marks. That is by design.</div>
     <div class="rep"><b>📄 For your report:</b> include one real explanation and one describe-a-house example (with its predicted price), and 2–3 sentences on what the LLM adds and its limits — and restate the honesty guardrail (model predicts, LLM explains). Feeds the <em>AI assistant / Conclusion</em> section.</div>
     <div class="done"><b>✅ Done when:</b> the LLM prints a 3–4 sentence explanation that does <em>not</em> state a different price, and (if attempted) the described house gets a sensible predicted price.</div>
