@@ -207,9 +207,12 @@ r2 = r2_score(y_test, rf_model.predict(X_test))   <span class="c"># ~0.92 - it w
     <p>You then <strong>compare</strong> the two: which predicts real prices more accurately, and why? That comparison is the heart of the report.</p>
 
     <h3>The AI assistant (verified Groq quickstart)</h3>
-    <pre><span class="c"># from console.groq.com/docs/quickstart - free tier, no credit card</span>
+    <pre><span class="c"># key loaded from your Colab Secret (full setup in Build Spec M9)</span>
+from google.colab import userdata
+import os
+os.environ["GROQ_API_KEY"] = userdata.get("GROQ_API_KEY")
 from groq import Groq
-client = Groq(api_key=os.environ["GROQ_API_KEY"])
+client = Groq()   # reads GROQ_API_KEY from the environment
 resp = client.chat.completions.create(
     model="llama-3.3-70b-versatile",
     messages=[{"role":"user","content":

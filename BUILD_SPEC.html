@@ -684,7 +684,8 @@ sample_price = value_house(my_house)
 
 <span class="c"># BATCH - explain each row of the M8 batch table (loop over predictions)</span>
 <span class="k">for</span> _, h <span class="k">in</span> batch.iterrows():
-    <span class="k">print</span>(f<span class="s">"${h['predicted_price']:,.0f}:"</span>, explain_valuation(h[FEATURES].to_dict(), h[<span class="s">"predicted_price"</span>], drivers)[:<span class="s">120</span>], <span class="s">"..."</span>)</pre>
+    expl = explain_valuation(h[FEATURES].to_dict(), h[<span class="s">"predicted_price"</span>], drivers)
+    <span class="k">print</span>(f<span class="s">"${h['predicted_price']:,.0f}:"</span>, expl[:<span class="s">120</span>], <span class="s">"..."</span>)</pre>
     <div class="callout c-rose"><strong>The honesty guardrail, in code.</strong> Notice the prompt says <em>"a model has ALREADY estimated… Do NOT change or re-estimate the price."</em> That single instruction is what keeps the LLM in its lane — explaining, not guessing prices. Keep it. In your report, state clearly that the model predicts and the LLM explains.</div>
     <h4>Optional second feature — describe a house in words → a price</h4>
     <pre><span class="k">def</span> parse_house_text(text, allowed_neighborhoods):
